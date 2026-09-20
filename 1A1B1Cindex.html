@@ -9,6 +9,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#4f46e5">
+<meta name="description" content="Speakout B2 — EFL phrase trainer for mobile">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-size='48' fill='white' font-family='system-ui'%3ESB%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-size='48' fill='white' font-family='system-ui'%3ESB%3C/text%3E%3C/svg%3E">
 <title>Speakout B2</title>
 <style>
 :root {
@@ -52,12 +55,13 @@ html, body {
   width: 100%;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   touch-action: manipulation;
-  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 body {
   min-height: 100%;
@@ -65,6 +69,7 @@ body {
   min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 button, input, textarea, select {
   font: inherit;
@@ -86,6 +91,14 @@ button {
   -webkit-user-select: none;
   user-select: none;
   min-height: 44px;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+a, .tab, .word-card, .mc-opt, .order-tile, .hang-letter, .drawer-item {
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
 }
 a { color: var(--accent); }
 img { max-width: 100%; height: auto; -webkit-user-drag: none; }
@@ -94,9 +107,9 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 #app {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  height: 100dvh;
-  height: -webkit-fill-available;
+  min-height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   max-width: 480px;
   width: 100%;
   margin: 0 auto;
@@ -104,9 +117,9 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   background: var(--bg);
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
-  overflow: hidden;
+  overflow: visible;
+  z-index: 1;
 }
-
 /* Brand header */
 #header {
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -131,8 +144,10 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 /* Chrome under header */
 #chrome {
   flex-shrink: 0;
-  padding: 10px 12px 0;
+  padding: 10px 12px 8px;
   background: var(--bg);
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
 }
 .top-bar {
   display: flex;
@@ -212,14 +227,15 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: var(--muted);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   margin-bottom: 8px;
 }
@@ -303,11 +319,24 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 
 /* Main content */
 #main {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 8px 12px calc(16px + var(--safe-bottom));
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: visible;
+  padding: 10px 14px calc(28px + var(--safe-bottom));
+  position: relative;
+  z-index: 1;
+}
+.view { display: none; }
+.view.active { display: block; }
+#practicePanel {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding-bottom: 28px;
+}
+#practicePanel.active {
+  display: flex !important;
 }
 
 /* Drawer */
@@ -317,24 +346,33 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   background: rgba(15,23,42,0.4);
   z-index: 50;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
+  pointer-events: none !important;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
 }
-#overlay.open { opacity: 1; pointer-events: auto; }
+#overlay.open {
+  opacity: 1;
+  pointer-events: auto !important;
+  visibility: visible;
+}
 #drawer {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: min(300px, 82vw);
+  width: min(320px, 88vw);
   background: var(--surface);
   z-index: 60;
   transform: translateX(-105%);
   transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
   padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
   display: flex;
   flex-direction: column;
   box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 #drawer.open { transform: translateX(0); }
 .drawer-header {
@@ -371,16 +409,13 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 .drawer-item:active, .drawer-item:hover { background: var(--primary-soft); color: var(--primary); }
 .drawer-item .ico { width: 22px; text-align: center; font-size: 16px; }
 
-/* Views */
-.view { display: none; }
-.view.active { display: block; }
-
 /* Lesson picker */
 .lesson-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
   margin-top: 8px;
+  align-items: stretch;
 }
 .lesson-btn {
   aspect-ratio: 1.1;
@@ -474,21 +509,21 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 /* Word grid */
 .word-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
-@media (min-width: 420px) {
+@media (min-width: 380px) {
+  .word-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 520px) {
   .word-grid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (min-width: 560px) {
-  .word-grid { grid-template-columns: repeat(5, 1fr); }
 }
 .word-card {
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: 14px;
-  padding: 14px 8px;
-  min-height: 88px;
+  padding: 14px 10px;
+  min-height: 96px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -503,11 +538,11 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(79,70,229,0.15);
 }
-.word-card .emoji { font-size: 1.6rem; line-height: 1.2; display: block; }
+.word-card .emoji { font-size: 1.75rem; line-height: 1.2; display: block; }
 .word-card .term {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.3;
   color: var(--text);
   word-break: break-word;
 }
@@ -523,19 +558,14 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 .word-card.learned { border-color: var(--success); }
 .word-card.difficult { border-color: #f59e0b; }
 
-/* Practice panel */
-#practicePanel {
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-}
-#practicePanel.active { display: flex; }
+/* Practice panel typography */
 .prac-term {
-  font-size: 22px;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1.3;
   color: var(--primary);
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 .prac-phonetic { color: var(--muted); font-size: 14px; margin-top: 2px; font-style: italic; }
 .prac-def {
@@ -544,14 +574,14 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   border-radius: 0 12px 12px 0;
   padding: 14px;
   font-size: 15px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .prac-example {
   font-size: 14px;
   color: var(--muted);
   font-style: italic;
   margin-top: 8px;
-  line-height: 1.4;
+  line-height: 1.45;
   background: var(--success-soft);
   border-left: 3px solid var(--success);
   border-radius: 0 10px 10px 0;
@@ -579,8 +609,8 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   gap: 6px;
   min-height: var(--touch);
   padding: 0 16px;
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 600;
   background: var(--surface);
   border: 1.5px solid var(--border);
@@ -594,34 +624,54 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 .btn-warn { background: var(--warn); color: #fff; border-color: var(--warn); }
 .btn-ghost { background: transparent; box-shadow: none; }
 .btn-block { width: 100%; }
-.btn-sm { min-height: 40px; padding: 0 12px; font-size: 13px; }
+.btn-sm { min-height: 44px; padding: 0 14px; font-size: 14px; }
 
-/* Tabs */
+/* Tabs — swipeable, large enough to see on iPhone */
+.tabs-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: linear-gradient(to bottom, var(--bg) 70%, transparent);
+  padding: 4px 0 8px;
+  margin: 0 -4px;
+}
 .tabs {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding: 4px 4px 10px;
   border-bottom: 2px solid var(--border);
 }
-.tabs::-webkit-scrollbar { display: none; }
+.tabs::-webkit-scrollbar { height: 3px; }
+.tabs::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 3px; }
 .tab {
   flex-shrink: 0;
+  scroll-snap-align: start;
   padding: 10px 14px;
   font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  background: transparent;
-  border: none;
+  font-weight: 700;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
   color: var(--muted);
-  min-height: 40px;
+  min-height: 44px;
+  box-shadow: var(--shadow);
 }
 .tab.active {
   background: var(--primary);
   color: #fff;
+  border-color: var(--primary);
 }
-.tab-pane { display: none; margin-top: 10px; }
+.tab-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 6px;
+  text-align: center;
+}
+.tab-pane { display: none; margin-top: 12px; padding-bottom: 12px; }
 .tab-pane.active { display: block; }
 
 /* Quiz / MC */
@@ -696,28 +746,207 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 .rec-status.listening { color: var(--primary); font-weight: 600; }
 .rec-status.error { color: var(--danger); }
 
+/* Gap / order / hangman */
+.gap-sentence {
+  font-size: 1rem;
+  line-height: 1.55;
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1.5px dashed var(--border);
+}
+.gap-blank {
+  display: inline-block;
+  min-width: 4.5em;
+  border-bottom: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+  text-align: center;
+  padding: 0 4px;
+}
+.order-built {
+  min-height: 48px;
+  padding: 10px;
+  background: var(--primary-soft);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.order-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.order-tile {
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  min-height: 44px;
+}
+.order-tile:active { transform: scale(0.96); }
+.order-tile.used { opacity: 0.35; pointer-events: none; }
+.order-chip {
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.hang-art {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.25;
+  color: var(--muted);
+  margin: 8px 0;
+  min-height: 110px;
+}
+.hang-word {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin: 12px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.hang-slot {
+  min-width: 1.1em;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+  padding: 2px 2px 4px;
+}
+.hang-slot.space { border-bottom-color: transparent; min-width: 0.6em; }
+.hang-letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.hang-letter {
+  width: 40px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: var(--shadow);
+  min-height: 44px;
+}
+.hang-letter.used { opacity: 0.4; pointer-events: none; }
+.hang-letter.good { border-color: var(--success); background: var(--success-soft); color: var(--success); }
+.hang-letter.bad { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); }
+
 /* YouGlish */
 #youglishBox {
-  margin-top: 8px;
-  border-radius: 12px;
+  display: none;
+  margin-top: 10px;
+  border-radius: 14px;
   overflow: hidden;
   background: #0f172a;
-  display: none;
-  border: 1px solid var(--border);
+  border: 1.5px solid #334155;
+  min-height: 120px;
+  max-height: none;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
 }
-#youglishBox.visible { display: block; }
+#youglishBox.visible {
+  display: flex !important;
+  flex-direction: column;
+}
+#youglishBox iframe,
+#youglishFrame {
+  pointer-events: auto;
+  max-width: 100%;
+}
+.yg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+.yg-header a, .yg-header button {
+  color: #a5b4fc;
+  font-size: 12px;
+  font-weight: 700;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: #0f172a;
+}
+.yg-header a { text-decoration: none; display: inline-flex; align-items: center; }
+#yg-loading {
+  padding: 28px 16px;
+  text-align: center;
+  color: #94a3b8;
+  background: #0f172a;
+}
 #youglishFrame {
   width: 100%;
-  height: 220px;
+  height: 360px;
+  min-height: 300px;
   border: 0;
   background: #0f172a;
+  display: none;
+}
+#yg-widget {
+  width: 100%;
+  min-height: 300px;
+  background: #0f172a;
+  display: none;
+}
+#yg-fallback {
+  display: none;
+  padding: 20px 16px 24px;
+  text-align: center;
+  color: #cbd5e1;
+  background: #0f172a;
+  line-height: 1.45;
+  font-size: 14px;
+}
+#yg-fallback a.yg-open-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #4f46e5;
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
 }
 
 /* Match game */
 .match-board {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 .match-tile {
   padding: 12px 10px;
@@ -827,10 +1056,12 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   width: 100%;
   max-width: 480px;
   max-height: 88vh;
+  max-height: 88dvh;
   background: var(--surface);
   border-radius: 20px 20px 0 0;
   padding: 12px 16px calc(16px + var(--safe-bottom));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation: sheetUp 0.28s ease;
   box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
 }
@@ -930,7 +1161,13 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
     <!-- Home / Lesson picker -->
     <div id="viewHome" class="view active">
       <div class="section-title">Choose a lesson</div>
+      <p style="font-size:13px;color:var(--muted);margin:-4px 0 12px;line-height:1.4;">
+        Tap a lesson → open a card → swipe exercise tabs. Menu (☰) has Match, gaps, hangman &amp; more.
+      </p>
       <div id="lessonPicker" class="lesson-grid"></div>
+      <p style="font-size:12px;color:var(--muted);text-align:center;margin:24px 0 8px;line-height:1.4;">
+        Progress is saved on this device · Best on Safari / Chrome
+      </p>
     </div>
 
     <!-- Word grid for active lesson -->
@@ -966,24 +1203,45 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
         <button class="btn btn-success" id="btnLearned">✓ Learned</button>
         <button class="btn btn-warn" id="btnDifficult">🔥 Difficult</button>
       </div>
-      <div id="youglishBox">
-        <div id="yg-loading" style="display:none;padding:24px;text-align:center;color:#94a3b8;background:#0f172a;">
+      <div id="youglishBox" aria-live="polite">
+        <div class="yg-header">
+          <span id="yg-title">YouGlish · real speech</span>
+          <span style="display:flex;gap:6px;flex-wrap:wrap;">
+            <a id="yg-open-link" href="#" target="_blank" rel="noopener">Open ↗</a>
+            <button type="button" id="yg-close-btn">Close</button>
+          </span>
+        </div>
+        <div id="yg-loading">
           <div style="font-size:28px;margin-bottom:8px;">🎬</div>
           <div id="yg-loading-text">Loading real examples…</div>
         </div>
-        <div id="yg-widget" style="width:100%;min-height:220px;background:#0f172a;"></div>
-        <iframe id="youglishFrame" allow="autoplay" loading="lazy" style="display:none;"></iframe>
+        <div id="yg-widget"></div>
+        <iframe id="youglishFrame" title="YouGlish examples" allow="autoplay; fullscreen" loading="eager" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div id="yg-fallback">
+          <div style="font-size:28px;margin-bottom:8px;">🎬</div>
+          <div>Videos can’t be embedded here (common on iPhone / local files).</div>
+          <a class="yg-open-btn" id="yg-fallback-link" href="#" target="_blank" rel="noopener">Open YouGlish in browser</a>
+        </div>
       </div>
-      <div class="tabs" id="pracTabs">
-        <button class="tab active" data-tab="mc">Multiple choice</button>
-        <button class="tab" data-tab="spell">Spelling</button>
-        <button class="tab" data-tab="write">Write sentence</button>
-        <button class="tab" data-tab="speak">Speak term</button>
-        <button class="tab" data-tab="speakSent">Speak sentence</button>
+      <div class="tabs-wrap">
+        <div class="tab-hint">Exercises — swipe tabs sideways</div>
+        <div class="tabs" id="pracTabs">
+          <button class="tab active" data-tab="mc">Multiple choice</button>
+          <button class="tab" data-tab="spell">Spelling</button>
+          <button class="tab" data-tab="gap">Gap fill</button>
+          <button class="tab" data-tab="order">Word order</button>
+          <button class="tab" data-tab="hangman">Hangman</button>
+          <button class="tab" data-tab="write">Write</button>
+          <button class="tab" data-tab="speak">Speak</button>
+          <button class="tab" data-tab="speakSent">Speak sentence</button>
+        </div>
       </div>
-      <div id="pane-mc" class="tab-pane active">
+<div id="pane-mc" class="tab-pane active">
         <div id="mcPrompt" class="prompt-box"></div>
         <div class="mc-options" id="mcOptions"></div>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnMcHint">Hint</button>
+        </div>
         <div class="feedback" id="mcFeedback"></div>
       </div>
       <div id="pane-spell" class="tab-pane">
@@ -996,21 +1254,64 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
         </div>
         <div class="feedback" id="spellFeedback"></div>
       </div>
+      <div id="pane-gap" class="tab-pane">
+        <div class="prompt-box" id="gapPrompt">Fill the gap with the phrase.</div>
+        <div id="gapSentence" class="gap-sentence"></div>
+        <input class="spell-input" id="gapInput" placeholder="Type the missing phrase…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnGapHint">Hint</button>
+          <button class="btn btn-sm" id="btnGapHear">🔊 Hear</button>
+          <button class="btn btn-primary btn-sm" id="btnGapCheck">Check</button>
+        </div>
+        <div class="feedback" id="gapFeedback"></div>
+      </div>
+      <div id="pane-order" class="tab-pane">
+        <div class="prompt-box">Tap the tiles to put the phrase in the correct order.</div>
+        <div id="orderBuilt" class="order-built"></div>
+        <div id="orderTiles" class="order-tiles"></div>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnOrderClear">Clear</button>
+          <button class="btn btn-sm" id="btnOrderHint">Hint</button>
+          <button class="btn btn-primary btn-sm" id="btnOrderCheck">Check</button>
+        </div>
+        <div class="feedback" id="orderFeedback"></div>
+      </div>
+      <div id="pane-hangman" class="tab-pane">
+        <div class="prompt-box" id="hangDef">Guess the phrase letter by letter.</div>
+        <div id="hangArt" class="hang-art"></div>
+        <div id="hangWord" class="hang-word"></div>
+        <div id="hangLetters" class="hang-letters"></div>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnHangHint">Hint</button>
+          <button class="btn btn-sm" id="btnHangReset">New round</button>
+          <button class="btn btn-sm" id="btnHangHear">🔊 Hear</button>
+        </div>
+        <div class="feedback" id="hangFeedback"></div>
+      </div>
       <div id="pane-write" class="tab-pane">
         <div class="prompt-box" id="writePrompt"></div>
         <textarea class="sentence-input" id="writeInput" placeholder="Write a sentence that uses the phrase…"></textarea>
-        <button class="btn btn-primary btn-block" id="btnWriteCheck">Check phrase used</button>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnWriteHint">Hint</button>
+          <button class="btn btn-primary btn-sm" id="btnWriteCheck">Check phrase used</button>
+        </div>
         <div class="feedback" id="writeFeedback"></div>
       </div>
       <div id="pane-speak" class="tab-pane">
         <div class="prompt-box">Tap the mic and say the phrase clearly.</div>
-        <button class="btn btn-primary btn-block" id="btnSpeakTerm">🎤 Speak term</button>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnSpeakTermHint">Hint</button>
+          <button class="btn btn-primary btn-sm" id="btnSpeakTerm">🎤 Speak term</button>
+        </div>
         <div class="rec-status" id="speakTermStatus"></div>
         <div class="feedback" id="speakTermFeedback"></div>
       </div>
       <div id="pane-speakSent" class="tab-pane">
         <div class="prompt-box" id="speakSentPrompt"></div>
-        <button class="btn btn-primary btn-block" id="btnSpeakSent">🎤 Speak a sentence</button>
+        <div class="prac-actions">
+          <button class="btn btn-sm" id="btnSpeakSentHint">Hint</button>
+          <button class="btn btn-primary btn-sm" id="btnSpeakSent">🎤 Speak a sentence</button>
+        </div>
         <div class="rec-status" id="speakSentStatus"></div>
         <div class="feedback" id="speakSentFeedback"></div>
       </div>
@@ -1031,6 +1332,9 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
       <button class="drawer-item" data-action="lessons"><span class="ico">📚</span> Lessons</button>
       <button class="drawer-item" data-action="flashcards"><span class="ico">🃏</span> Flashcards</button>
       <button class="drawer-item" data-action="match"><span class="ico">🔗</span> Match</button>
+      <button class="drawer-item" data-action="gapAll"><span class="ico">📝</span> Fill the gaps</button>
+      <button class="drawer-item" data-action="orderAll"><span class="ico">🔀</span> Word order</button>
+      <button class="drawer-item" data-action="hangmanAll"><span class="ico">🎮</span> Hangman</button>
       <button class="drawer-item" data-action="quiz"><span class="ico">❓</span> Random Quiz</button>
       <button class="drawer-item" data-action="testSpelling"><span class="ico">✍️</span> Test Spelling</button>
       <button class="drawer-item" data-action="testPron"><span class="ico">🗣️</span> Test Pronunciation</button>
@@ -1836,12 +2140,20 @@ function showBack(show) {
 }
 
 function openDrawer() {
-  $('drawer').classList.add('open');
-  $('overlay').classList.add('open');
+  const d = $('drawer'); const o = $('overlay');
+  if (d) d.classList.add('open');
+  if (o) {
+    o.classList.add('open');
+    o.style.pointerEvents = 'auto';
+  }
 }
 function closeDrawer() {
-  $('drawer').classList.remove('open');
-  $('overlay').classList.remove('open');
+  const d = $('drawer'); const o = $('overlay');
+  if (d) d.classList.remove('open');
+  if (o) {
+    o.classList.remove('open');
+    o.style.pointerEvents = 'none';
+  }
 }
 
 function showView(name) {
@@ -1975,11 +2287,21 @@ function openPractice(w) {
   if ($('btnDifficult')) $('btnDifficult').textContent = isDifficult(w) ? '🔥 Difficult' : '🔥 Mark difficult';
   setupMC();
   setupSpell();
+  setupGap();
+  setupOrder();
+  setupHangman();
   setupWrite();
   setupSpeakTerm();
   setupSpeakSent();
+  ensureInteractive();
   showView('practice');
   setTitle(w.term.length > 22 ? w.term.slice(0, 20) + '…' : w.term);
+  const main = $('main');
+  if (main) main.scrollTop = 0;
+  try {
+    const termEl = $('pracTerm');
+    if (termEl) termEl.scrollIntoView({ block: 'start', behavior: 'auto' });
+  } catch (e) {}
 }
 const selectWord = openPractice;
 
@@ -2047,10 +2369,205 @@ function setupSpeakTerm() {
 
 function setupSpeakSent() {
   const w = currentWord;
-  $('speakSentPrompt').textContent = 'Say a sentence that uses “' + w.term + '”. Meaning: ' + w.definition;
-  $('speakSentStatus').textContent = '';
-  $('speakSentStatus').className = 'rec-status';
-  $('speakSentFeedback').className = 'feedback';
+  if (!w) return;
+  const el = $('speakSentPrompt');
+  if (el) el.textContent = 'Say a sentence that uses “' + w.term + '”. Meaning: ' + w.definition;
+  if ($('speakSentStatus')) { $('speakSentStatus').textContent = ''; $('speakSentStatus').className = 'rec-status'; }
+  if ($('speakSentFeedback')) $('speakSentFeedback').className = 'feedback';
+}
+
+/* ---------- Gap fill ---------- */
+function blankExample(w) {
+  const ex = (w.example || '').trim();
+  const term = w.term || '';
+  if (!ex) return 'Complete: _____ (' + (w.definition || '') + ')';
+  // case-insensitive replace first occurrence of term
+  const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  if (re.test(ex)) {
+    return ex.replace(re, '_____');
+  }
+  return '_____ — ' + (w.definition || ex);
+}
+
+function setupGap() {
+  const w = currentWord;
+  if (!w) return;
+  const sent = $('gapSentence');
+  if (sent) {
+    const blanked = blankExample(w);
+    sent.innerHTML = blanked.replace('_____', '<span class="gap-blank">_____</span>');
+  }
+  if ($('gapInput')) $('gapInput').value = '';
+  if ($('gapFeedback')) $('gapFeedback').className = 'feedback';
+}
+
+/* ---------- Word order ---------- */
+let orderState = { tokens: [], picked: [] };
+
+
+function phraseHint(term, level) {
+  term = term || '';
+  level = level || 1;
+  if (level <= 1) {
+    // first letter of each word
+    return term.split(/(\s+)/).map(part => {
+      if (/^\s+$/.test(part)) return part;
+      if (!part) return part;
+      return part[0] + '·'.repeat(Math.max(0, part.length - 1));
+    }).join('');
+  }
+  // every other letter
+  return term.split('').map((c, i) => (c === ' ' || i % 2 === 0) ? c : '·').join('');
+}
+
+function hangRevealOne() {
+  if (!hangState || hangState.done) return;
+  for (let i = 0; i < hangState.answer.length; i++) {
+    const ch = hangState.answer[i];
+    if (/[a-z0-9]/.test(ch) && hangState.display[i] === '_') {
+      hangGuess(ch);
+      return;
+    }
+  }
+}
+
+function tokenizePhrase(term) {
+  return (term || '').trim().split(/\s+/).filter(Boolean);
+}
+
+function setupOrder() {
+  const w = currentWord;
+  if (!w) return;
+  const tokens = tokenizePhrase(w.term);
+  orderState = { tokens: tokens.slice(), picked: [] };
+  const tiles = $('orderTiles');
+  const built = $('orderBuilt');
+  if (built) built.innerHTML = '';
+  if ($('orderFeedback')) $('orderFeedback').className = 'feedback';
+  if (!tiles) return;
+  tiles.innerHTML = '';
+  const shuffled = shuffle(tokens.slice());
+  shuffled.forEach((tok, idx) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'order-tile';
+    b.textContent = tok;
+    b.dataset.tok = tok;
+    b.dataset.idx = String(idx);
+    b.addEventListener('click', () => {
+      if (b.classList.contains('used')) return;
+      b.classList.add('used');
+      orderState.picked.push(tok);
+      renderOrderBuilt();
+    });
+    tiles.appendChild(b);
+  });
+}
+
+function renderOrderBuilt() {
+  const built = $('orderBuilt');
+  if (!built) return;
+  built.innerHTML = '';
+  orderState.picked.forEach((tok, i) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'order-chip';
+    chip.textContent = tok;
+    chip.addEventListener('click', () => {
+      // remove this chip and free a matching tile
+      orderState.picked.splice(i, 1);
+      const tiles = qsa('#orderTiles .order-tile.used');
+      for (let t of tiles) {
+        if (t.dataset.tok === tok) { t.classList.remove('used'); break; }
+      }
+      renderOrderBuilt();
+    });
+    built.appendChild(chip);
+  });
+}
+
+/* ---------- Hangman ---------- */
+const HANG_STAGES = [
+  '  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========',
+  '  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n========='
+];
+let hangState = null;
+
+function setupHangman() {
+  const w = currentWord;
+  if (!w) return;
+  const answer = (w.term || '').toLowerCase();
+  hangState = {
+    answer: answer,
+    display: answer.split('').map(ch => /[a-z0-9]/.test(ch) ? '_' : ch),
+    wrong: 0,
+    guessed: {},
+    done: false
+  };
+  if ($('hangDef')) $('hangDef').textContent = w.definition || 'Guess the phrase letter by letter.';
+  if ($('hangFeedback')) $('hangFeedback').className = 'feedback';
+  renderHangman();
+}
+
+function renderHangman() {
+  if (!hangState) return;
+  const art = $('hangArt');
+  if (art) art.textContent = HANG_STAGES[Math.min(hangState.wrong, HANG_STAGES.length - 1)];
+  const word = $('hangWord');
+  if (word) {
+    word.innerHTML = hangState.display.map(ch => {
+      if (ch === ' ') return '<span class="hang-slot space">&nbsp;</span>';
+      return '<span class="hang-slot">' + (ch === '_' ? '' : ch) + '</span>';
+    }).join('');
+  }
+  const letters = $('hangLetters');
+  if (!letters) return;
+  letters.innerHTML = '';
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(L => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'hang-letter';
+    b.textContent = L.toUpperCase();
+    if (hangState.guessed[L]) {
+      b.classList.add('used');
+      b.classList.add(hangState.answer.indexOf(L) >= 0 ? 'good' : 'bad');
+    }
+    b.addEventListener('click', () => hangGuess(L));
+    letters.appendChild(b);
+  });
+}
+
+function hangGuess(L) {
+  if (!hangState || hangState.done || hangState.guessed[L]) return;
+  hangState.guessed[L] = true;
+  if (hangState.answer.indexOf(L) >= 0) {
+    hangState.display = hangState.display.map((ch, i) => hangState.answer[i] === L ? L : ch);
+    if (hangState.display.join('') === hangState.answer) {
+      hangState.done = true;
+      if ($('hangFeedback')) {
+        $('hangFeedback').textContent = '✅ You got it: “' + currentWord.term + '”';
+        $('hangFeedback').className = 'feedback show ok';
+      }
+      addPoints(8);
+      bumpDaily();
+    }
+  } else {
+    hangState.wrong += 1;
+    if (hangState.wrong >= HANG_STAGES.length - 1) {
+      hangState.done = true;
+      hangState.display = hangState.answer.split('');
+      if ($('hangFeedback')) {
+        $('hangFeedback').textContent = 'Out of tries. The phrase was: “' + currentWord.term + '”';
+        $('hangFeedback').className = 'feedback show bad';
+      }
+    }
+  }
+  renderHangman();
 }
 
 /* phrase check: whole phrase present (case-insensitive, flexible spaces) */
@@ -2222,92 +2739,175 @@ function startListen(onResult, onError, statusEl) {
   setTimeout(() => { try { if (recogActive) r.stop(); } catch (e) {} }, 8000);
 }
 
-/* ---------- YouGlish (official widget + iframe fallback) ---------- */
+/* ---------- YouGlish (always-visible panel + widget / iframe / open link) ---------- */
 let ygWidget = null;
 let ygReady = false;
 let ygPending = null;
+let ygLastTerm = '';
+let ygTimer = null;
+
+function ygUrl(term) {
+  return 'https://youglish.com/pronounce/' + encodeURIComponent(term).replace(/%20/g, '+') + '/english';
+}
+
+function ygSetLinks(term) {
+  const url = ygUrl(term);
+  const a1 = $('yg-open-link');
+  const a2 = $('yg-fallback-link');
+  if (a1) a1.href = url;
+  if (a2) a2.href = url;
+  const title = $('yg-title');
+  if (title) title.textContent = 'YouGlish · “' + term + '”';
+}
+
+function ygShowOnly(which) {
+  const loading = $('yg-loading');
+  const frame = $('youglishFrame');
+  const widget = $('yg-widget');
+  const fallback = $('yg-fallback');
+  if (loading) loading.style.display = which === 'loading' ? 'block' : 'none';
+  if (frame) frame.style.display = which === 'frame' ? 'block' : 'none';
+  if (widget) widget.style.display = which === 'widget' ? 'block' : 'none';
+  if (fallback) fallback.style.display = which === 'fallback' ? 'block' : 'none';
+}
 
 function loadYouGlish(term) {
   if (!term) return;
   const box = $('youglishBox');
-  const loading = $('yg-loading');
-  const loadingText = $('yg-loading-text');
-  const frame = $('youglishFrame');
-  const widgetEl = $('yg-widget');
   if (!box) return;
+  ygLastTerm = term;
+  ygSetLinks(term);
   box.classList.add('visible');
-  if (loading) {
-    loading.style.display = 'block';
-    if (loadingText) loadingText.textContent = 'Loading real examples of “' + term + '”…';
-  }
-  if (frame) { frame.style.display = 'none'; frame.src = ''; }
-  if (ygReady && window.YG && ygWidget) {
+  ygShowOnly('loading');
+  const loadingText = $('yg-loading-text');
+  if (loadingText) loadingText.textContent = 'Loading real examples of “' + term + '”…';
+
+  // Scroll panel into view so it’s never off-screen on iPhone
+  try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+
+  if (ygTimer) clearTimeout(ygTimer);
+
+  // 1) Official widget when available
+  if (window.YG) {
     try {
-      ygWidget.fetch(term, 'english');
-      return;
-    } catch (e) { console.warn(e); }
-  }
-  if (window.YG && !ygWidget) {
-    try {
-      ygWidget = new YG.Widget('yg-widget', {
-        width: 480,
-        components: 255,
-        events: {
-          onFetchDone: function () {
-            if (loading) loading.style.display = 'none';
-          },
-          onError: function () {
-            fallbackYouGlish(term);
+      if (!ygWidget) {
+        ygWidget = new YG.Widget('yg-widget', {
+          width: Math.min(480, Math.max(280, (box.clientWidth || window.innerWidth || 360) - 8)),
+          components: 255,
+          events: {
+            onFetchDone: function () {
+              ygShowOnly('widget');
+            },
+            onError: function () {
+              tryIframeOrFallback(term);
+            }
           }
-        }
-      });
-      ygReady = true;
+        });
+        ygReady = true;
+      }
+      ygShowOnly('widget');
+      const loading = $('yg-loading');
+      if (loading) loading.style.display = 'block';
       ygWidget.fetch(term, 'english');
+      // If widget stays empty, fall back
+      ygTimer = setTimeout(() => {
+        const w = $('yg-widget');
+        if (w && w.children.length === 0) tryIframeOrFallback(term);
+        else ygShowOnly('widget');
+      }, 3500);
       return;
-    } catch (e) { console.warn(e); }
+    } catch (e) {
+      console.warn('YG widget', e);
+    }
   }
+
+  // 2) Widget script not ready yet — queue and try iframe
   ygPending = term;
-  // iframe fallback
-  fallbackYouGlish(term);
+  tryIframeOrFallback(term);
 }
 
-function fallbackYouGlish(term) {
-  const loading = $('yg-loading');
+function tryIframeOrFallback(term) {
   const frame = $('youglishFrame');
-  if (loading) loading.style.display = 'none';
+  // Many mobile browsers block YouGlish in iframes (X-Frame-Options).
+  // Still try briefly; always keep Open link available.
   if (frame) {
-    frame.style.display = 'block';
-    frame.src = 'https://youglish.com/pronounce/' + encodeURIComponent(term) + '/english';
+    ygShowOnly('frame');
+    const loading = $('yg-loading');
+    if (loading) loading.style.display = 'block';
+    frame.onload = function () {
+      // Cross-origin: we can't read content; assume it may be blank on iOS
+      setTimeout(() => {
+        // On file:// or strict mobile, show fallback UI under the frame
+        const isRestricted = /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
+          location.protocol === 'file:';
+        if (isRestricted) {
+          ygShowOnly('fallback');
+        } else {
+          ygShowOnly('frame');
+        }
+      }, 800);
+    };
+    frame.onerror = function () { ygShowOnly('fallback'); };
+    frame.src = ygUrl(term) + '?t=' + Date.now();
+    ygTimer = setTimeout(() => {
+      // Ensure something visible
+      if ($('youglishBox') && $('youglishBox').classList.contains('visible')) {
+        const isRestricted = /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
+          location.protocol === 'file:';
+        if (isRestricted) ygShowOnly('fallback');
+        else {
+          const loading = $('yg-loading');
+          if (loading) loading.style.display = 'none';
+        }
+      }
+    }, 2800);
+  } else {
+    ygShowOnly('fallback');
   }
 }
 
 function hideYouGlish() {
   const box = $('youglishBox');
   const frame = $('youglishFrame');
-  const loading = $('yg-loading');
+  if (ygTimer) clearTimeout(ygTimer);
   if (box) box.classList.remove('visible');
-  if (frame) { frame.src = ''; frame.style.display = 'none'; }
-  if (loading) loading.style.display = 'none';
+  if (frame) {
+    frame.onload = null;
+    frame.onerror = null;
+    frame.src = 'about:blank';
+  }
+  ygShowOnly('loading');
+  ygLastTerm = '';
+  if ($('btnYouglish')) $('btnYouglish').classList.remove('btn-primary');
 }
 
 function onYouglishAPIReady() {
   ygReady = true;
   try {
-    ygWidget = new YG.Widget('yg-widget', {
-      width: 480,
-      components: 255,
-      events: {
-        onFetchDone: function () {
-          const loading = $('yg-loading');
-          if (loading) loading.style.display = 'none';
+    if (!ygWidget) {
+      const box = $('youglishBox');
+      ygWidget = new YG.Widget('yg-widget', {
+        width: Math.min(480, Math.max(280, ((box && box.clientWidth) || window.innerWidth || 360) - 8)),
+        components: 255,
+        events: {
+          onFetchDone: function () { ygShowOnly('widget'); }
         }
-      }
-    });
-    if (ygPending) {
-      ygWidget.fetch(ygPending, 'english');
-      ygPending = null;
+      });
     }
-  } catch (e) { console.warn('YG init', e); }
+    if (ygPending) {
+      const term = ygPending;
+      ygPending = null;
+      try {
+        ygShowOnly('widget');
+        ygWidget.fetch(term, 'english');
+      } catch (e) {
+        tryIframeOrFallback(term);
+      }
+    }
+  } catch (e) {
+    console.warn('YG init', e);
+    if (ygPending) tryIframeOrFallback(ygPending);
+  }
 }
 window.onYouglishAPIReady = onYouglishAPIReady;
 
@@ -2419,6 +3019,189 @@ function startMatch() {
   setTitle('Match');
   showView('Mode');
   render();
+}
+
+function startGapAll() {
+  if (!requireLesson()) return;
+  const list = shuffle(words.slice());
+  let idx = 0, score = 0;
+  const content = $('modeContent');
+  function render() {
+    if (idx >= list.length) {
+      content.innerHTML = '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Gap fill complete<br><strong>' + score + '</strong> / ' + list.length + '</div>';
+      return;
+    }
+    const w = list[idx];
+    content.innerHTML =
+      '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
+      '<div class="prompt-box">Fill the gap</div>' +
+      '<div class="gap-sentence">' + blankExample(w).replace('_____', '<span class="gap-blank">_____</span>') + '</div>' +
+      '<input class="spell-input" id="gapAllInput" placeholder="Type the missing phrase…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
+      '<div class="prac-actions" style="margin-top:10px"><button class="btn btn-sm" id="gapAllHint">Hint</button><button class="btn btn-primary btn-sm" id="gapAllCheck">Check</button></div>' +
+      '<div class="feedback" id="gapAllFb"></div>';
+    const check = () => {
+      const val = (($('gapAllInput') && $('gapAllInput').value) || '').trim().toLowerCase().replace(/\s+/g, ' ');
+      const need = w.term.toLowerCase().replace(/\s+/g, ' ');
+      const fb = $('gapAllFb');
+      if (val === need) {
+        score++; addPoints(6); bumpDaily();
+        if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
+      } else {
+        if (fb) { fb.textContent = 'Answer: ' + w.term; fb.className = 'feedback show bad'; }
+      }
+      setTimeout(() => { idx++; render(); }, 900);
+    };
+    if ($('gapAllCheck')) $('gapAllCheck').onclick = check;
+    if ($('gapAllHint')) $('gapAllHint').onclick = () => {
+      const fb = $('gapAllFb');
+      if (fb) { fb.textContent = 'Hint: ' + phraseHint(w.term, 1); fb.className = 'feedback show'; }
+    };
+  }
+  setTitle('Fill the gaps');
+  showView('Mode');
+  render();
+}
+
+function startOrderAll() {
+  if (!requireLesson()) return;
+  const list = shuffle(words.slice()).filter(w => tokenizePhrase(w.term).length > 1);
+  if (!list.length) {
+    openModal('<div class="modal-title">Word order</div><p style="color:var(--muted)">Need multi-word phrases in this lesson.</p>');
+    return;
+  }
+  let idx = 0, score = 0;
+  let localPicked = [];
+  const content = $('modeContent');
+  function render() {
+    if (idx >= list.length) {
+      content.innerHTML = '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Word order complete<br><strong>' + score + '</strong> / ' + list.length + '</div>';
+      return;
+    }
+    const w = list[idx];
+    const tokens = tokenizePhrase(w.term);
+    localPicked = [];
+    content.innerHTML =
+      '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
+      '<div class="prompt-box">' + (w.definition || 'Put the words in order') + '</div>' +
+      '<div class="order-built" id="oaBuilt"></div>' +
+      '<div class="order-tiles" id="oaTiles"></div>' +
+      '<div class="prac-actions"><button class="btn btn-sm" id="oaClear">Clear</button><button class="btn btn-sm" id="oaHint">Hint</button><button class="btn btn-primary btn-sm" id="oaCheck">Check</button></div>' +
+      '<div class="feedback" id="oaFb"></div>';
+    const tiles = $('oaTiles');
+    shuffle(tokens.slice()).forEach(tok => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'order-tile';
+      b.textContent = tok;
+      b.onclick = () => {
+        if (b.classList.contains('used')) return;
+        b.classList.add('used');
+        localPicked.push({ tok: tok, btn: b });
+        const built = $('oaBuilt');
+        if (built) {
+          const chip = document.createElement('span');
+          chip.className = 'order-chip';
+          chip.textContent = tok;
+          built.appendChild(chip);
+        }
+      };
+      tiles.appendChild(b);
+    });
+    if ($('oaClear')) $('oaClear').onclick = () => render();
+    if ($('oaHint')) $('oaHint').onclick = () => {
+      const fb = $('oaFb');
+      if (fb) { fb.textContent = 'Hint: ' + phraseHint(w.term, 1); fb.className = 'feedback show'; }
+    };
+    if ($('oaCheck')) $('oaCheck').onclick = () => {
+      const got = localPicked.map(x => x.tok).join(' ').toLowerCase();
+      const need = w.term.toLowerCase().replace(/\s+/g, ' ').trim();
+      const fb = $('oaFb');
+      if (got === need) {
+        score++; addPoints(7); bumpDaily();
+        if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
+      } else {
+        if (fb) { fb.textContent = 'Answer: ' + w.term; fb.className = 'feedback show bad'; }
+      }
+      setTimeout(() => { idx++; render(); }, 900);
+    };
+  }
+  setTitle('Word order');
+  showView('Mode');
+  render();
+}
+
+function startHangmanAll() {
+  if (!requireLesson()) return;
+  const list = shuffle(words.slice());
+  let idx = 0, score = 0;
+  const content = $('modeContent');
+  function playOne() {
+    if (idx >= list.length) {
+      content.innerHTML = '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Hangman complete<br><strong>' + score + '</strong> / ' + list.length + '</div>';
+      return;
+    }
+    const w = list[idx];
+    currentWord = w;
+    setupHangman();
+    content.innerHTML =
+      '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
+      '<div class="prompt-box">' + (w.definition || '') + '</div>' +
+      '<div class="hang-art" id="hmArt"></div>' +
+      '<div class="hang-word" id="hmWord"></div>' +
+      '<div class="hang-letters" id="hmLetters"></div>' +
+      '<div class="feedback" id="hmFb"></div>' +
+      '<button class="btn btn-block" id="hmSkip" style="margin-top:8px">Skip / Next</button>';
+    const sync = () => {
+      if ($('hmArt') && $('hangArt')) $('hmArt').textContent = $('hangArt').textContent;
+      if ($('hmWord') && $('hangWord')) $('hmWord').innerHTML = $('hangWord').innerHTML;
+    };
+    // rebuild letters into mode pane
+    const letters = $('hmLetters');
+    letters.innerHTML = '';
+    'abcdefghijklmnopqrstuvwxyz'.split('').forEach(L => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hang-letter';
+      b.textContent = L.toUpperCase();
+      b.onclick = () => {
+        hangGuess(L);
+        // restyle
+        if (hangState.guessed[L]) {
+          b.classList.add('used');
+          b.classList.add(hangState.answer.indexOf(L) >= 0 ? 'good' : 'bad');
+        }
+        if ($('hmArt')) $('hmArt').textContent = HANG_STAGES[Math.min(hangState.wrong, HANG_STAGES.length - 1)];
+        if ($('hmWord')) {
+          $('hmWord').innerHTML = hangState.display.map(ch => {
+            if (ch === ' ') return '<span class="hang-slot space">&nbsp;</span>';
+            return '<span class="hang-slot">' + (ch === '_' ? '' : ch) + '</span>';
+          }).join('');
+        }
+        if (hangState.done) {
+          const ok = hangState.display.join('') === hangState.answer;
+          if (ok) score++;
+          const fb = $('hmFb');
+          if (fb) {
+            fb.textContent = ok ? '✅ ' + w.term : 'Answer: ' + w.term;
+            fb.className = 'feedback show ' + (ok ? 'ok' : 'bad');
+          }
+          setTimeout(() => { idx++; playOne(); }, 1000);
+        }
+      };
+      letters.appendChild(b);
+    });
+    if ($('hmArt')) $('hmArt').textContent = HANG_STAGES[0];
+    if ($('hmWord')) {
+      $('hmWord').innerHTML = hangState.display.map(ch => {
+        if (ch === ' ') return '<span class="hang-slot space">&nbsp;</span>';
+        return '<span class="hang-slot"></span>';
+      }).join('');
+    }
+    if ($('hmSkip')) $('hmSkip').onclick = () => { idx++; playOne(); };
+  }
+  setTitle('Hangman');
+  showView('Mode');
+  playOne();
 }
 
 function startQuiz() {
@@ -2945,6 +3728,9 @@ function wire() {
         setTitle('EFL Phrases');
       } else if (act === 'flashcards') startFlashcards();
       else if (act === 'match') startMatch();
+      else if (act === 'gapAll') startGapAll();
+      else if (act === 'orderAll') startOrderAll();
+      else if (act === 'hangmanAll') startHangmanAll();
       else if (act === 'quiz') startQuiz();
       else if (act === 'testSpelling') startTestSpelling();
       else if (act === 'testPron') startTestPron();
@@ -3017,9 +3803,16 @@ function wire() {
     const box = $('youglishBox');
     if (box && box.classList.contains('visible')) {
       hideYouGlish();
+      $('btnYouglish').classList.remove('btn-primary');
       return;
     }
     loadYouGlish(currentWord.term);
+    $('btnYouglish').classList.add('btn-primary');
+  });
+  const ygClose = $('yg-close-btn');
+  if (ygClose) ygClose.addEventListener('click', () => {
+    hideYouGlish();
+    if ($('btnYouglish')) $('btnYouglish').classList.remove('btn-primary');
   });
   $('btnLearned').addEventListener('click', () => {
     if (!currentWord) return;
@@ -3054,11 +3847,111 @@ function wire() {
       qsa('#pracTabs .tab').forEach(t => t.classList.remove('active'));
       qsa('.tab-pane').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
+      try { tab.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); } catch (e) {}
       const pane = $('pane-' + tab.dataset.tab);
       if (pane) pane.classList.add('active');
-      if (tab.dataset.tab === 'mc') setupMC();
+      const t = tab.dataset.tab;
+      if (t === 'mc') setupMC();
+      else if (t === 'spell') setupSpell();
+      else if (t === 'gap') setupGap();
+      else if (t === 'order') setupOrder();
+      else if (t === 'hangman') setupHangman();
+      else if (t === 'write') setupWrite();
+      else if (t === 'speak') setupSpeakTerm();
+      else if (t === 'speakSent') setupSpeakSent();
     });
   });
+
+  // gap / order / hangman controls
+  (function wireExtraPractice() {
+    const on = (id, fn) => { const el = $(id); if (el) el.addEventListener('click', fn); };
+    on('btnGapHint', () => {
+      if (!currentWord) return;
+      const term = currentWord.term;
+      const hint = term.split('').map((c, i) => (i % 3 === 0 || c === ' ') ? c : '·').join('');
+      if ($('gapFeedback')) { $('gapFeedback').textContent = 'Hint: ' + hint; $('gapFeedback').className = 'feedback show'; }
+    });
+    on('btnGapHear', () => { if (currentWord) speak(currentWord.term); });
+    on('btnGapCheck', () => {
+      if (!currentWord) return;
+      const val = (($('gapInput') && $('gapInput').value) || '').trim();
+      if (!val) {
+        if ($('gapFeedback')) { $('gapFeedback').textContent = 'Type the missing phrase.'; $('gapFeedback').className = 'feedback show'; }
+        return;
+      }
+      const ok = val.toLowerCase().replace(/\s+/g, ' ') === currentWord.term.toLowerCase().replace(/\s+/g, ' ');
+      if (ok) {
+        $('gapFeedback').textContent = '✅ Correct!';
+        $('gapFeedback').className = 'feedback show ok';
+        addPoints(6); bumpDaily();
+      } else {
+        const dist = levenshtein(val.replace(/\s+/g, ''), currentWord.term.replace(/\s+/g, ''));
+        $('gapFeedback').textContent = (dist <= 2 ? 'Very close. ' : '') + 'Answer: ' + currentWord.term;
+        $('gapFeedback').className = 'feedback show bad';
+      }
+    });
+    on('btnOrderClear', () => setupOrder());
+    on('btnOrderHint', () => {
+      if (!currentWord) return;
+      const first = tokenizePhrase(currentWord.term)[0] || '';
+      if ($('orderFeedback')) {
+        $('orderFeedback').textContent = 'Starts with: “' + first + '…”';
+        $('orderFeedback').className = 'feedback show';
+      }
+    });
+    on('btnOrderCheck', () => {
+      if (!currentWord) return;
+      const got = orderState.picked.join(' ').toLowerCase();
+      const need = currentWord.term.toLowerCase().replace(/\s+/g, ' ').trim();
+      if (got === need) {
+        $('orderFeedback').textContent = '✅ Perfect order!';
+        $('orderFeedback').className = 'feedback show ok';
+        addPoints(7); bumpDaily();
+      } else {
+        $('orderFeedback').textContent = 'Not yet. Target: “' + currentWord.term + '”';
+        $('orderFeedback').className = 'feedback show bad';
+      }
+    });
+    on('btnHangReset', () => setupHangman());
+    on('btnHangHear', () => { if (currentWord) speak(currentWord.term); });
+    on('btnHangHint', () => {
+      if (!currentWord || !hangState) return;
+      hangRevealOne();
+      if ($('hangFeedback') && !hangState.done) {
+        $('hangFeedback').textContent = 'Hint: one letter revealed';
+        $('hangFeedback').className = 'feedback show';
+      }
+    });
+    on('btnMcHint', () => {
+      if (!currentWord) return;
+      const fb = $('mcFeedback');
+      if (!fb) return;
+      fb.textContent = 'Hint: ' + phraseHint(currentWord.term, 1) + (currentWord.phonetic ? '  ' + currentWord.phonetic : '');
+      fb.className = 'feedback show';
+    });
+    on('btnWriteHint', () => {
+      if (!currentWord) return;
+      const fb = $('writeFeedback');
+      if (!fb) return;
+      const ex = currentWord.example || ('Try: I ... ' + currentWord.term + ' ...');
+      fb.textContent = 'Example: “' + ex + '”';
+      fb.className = 'feedback show';
+    });
+    on('btnSpeakTermHint', () => {
+      if (!currentWord) return;
+      const fb = $('speakTermFeedback');
+      if (!fb) return;
+      fb.textContent = 'Say: “' + currentWord.term + '”' + (currentWord.phonetic ? '  ' + currentWord.phonetic : '');
+      fb.className = 'feedback show';
+    });
+    on('btnSpeakSentHint', () => {
+      if (!currentWord) return;
+      const fb = $('speakSentFeedback');
+      if (!fb) return;
+      fb.textContent = 'Model: “' + (currentWord.example || currentWord.term) + '”';
+      fb.className = 'feedback show';
+    });
+  })();
 
   // spell
   $('btnSpellHint').addEventListener('click', () => {
@@ -3157,13 +4050,56 @@ function wire() {
 }
 
 /* ---------- Init ---------- */
+function registerPwaManifest() {
+  try {
+    const manifest = {
+      name: 'Speakout B2',
+      short_name: 'Speakout B2',
+      description: 'EFL phrase trainer — mobile-friendly practice',
+      start_url: '.',
+      display: 'standalone',
+      background_color: '#f8fafc',
+      theme_color: '#4f46e5',
+      orientation: 'portrait-primary',
+      icons: [{
+        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234f46e5'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-size='48' fill='white' font-family='system-ui'%3ESB%3C/text%3E%3C/svg%3E",
+        sizes: 'any',
+        type: 'image/svg+xml',
+        purpose: 'any maskable'
+      }]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    let link = document.querySelector('link[rel="manifest"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'manifest';
+      document.head.appendChild(link);
+    }
+    link.href = url;
+  } catch (e) { console.warn('manifest', e); }
+}
+
+function ensureInteractive() {
+  // Clear any stuck overlay/drawer that would block clicks
+  const ov = $('overlay');
+  const dr = $('drawer');
+  if (ov) {
+    ov.classList.remove('open');
+    ov.style.pointerEvents = 'none';
+  }
+  if (dr) dr.classList.remove('open');
+}
 function init() {
+  registerPwaManifest();
   loadCustomVocabulary();
   loadState();
   wire();
+  ensureInteractive();
   buildLessonPicker();
   updateStats();
   showView('Home');
+  ensureInteractive();
 }
 
 init();

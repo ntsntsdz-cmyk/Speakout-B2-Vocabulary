@@ -1,165 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speakout B2 Vocabulary</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9fb;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .dashboard-container {
-            width: 100%;
-            max-width: 600px;
-        }
-        .unit-container {
-            margin-bottom: 25px;
-        }
-        .unit-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #888;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .lesson-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        .lesson-card {
-            padding: 20px 0;
-            text-align: center;
-            border-radius: 12px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-        /* Active lessons (Blue/Purple style from your image) */
-        .lesson-card.active {
-            border: 2px solid #5d5fef;
-            color: #5d5fef;
-            background-color: #fff;
-        }
-        .lesson-card.active:hover {
-            background-color: #f0f1ff;
-        }
-        /* Locked lessons (Greyed out style from your image) */
-        .lesson-card.locked {
-            background-color: #f3f3f6;
-            color: #d1d1d6;
-            border: 2px solid transparent;
-            pointer-events: none; /* Disables clicking */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Speakout B2 · Vocabulary</title>
+<style>
+:root {
+  --primary: #4f46e5;
+  --primary-soft: #eef2ff;
+  --bg: #f8fafc;
+  --surface: #fff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --muted: #64748b;
+  --success: #059669;
+  --warn: #d97706;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  padding: calc(16px + var(--safe-top)) 16px calc(32px + var(--safe-bottom));
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 440px; margin: 0 auto; }
+
+header { text-align: center; margin-bottom: 18px; }
+.logo {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff; font-weight: 800; font-size: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+}
+h1 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.03em; }
+.sub { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+
+.overall {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+}
+.overall h2 {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted); margin-bottom: 10px;
+}
+.ring-row { display: flex; align-items: center; gap: 14px; }
+.ring {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: conic-gradient(var(--success) calc(var(--pct) * 1%), #e2e8f0 0);
+  display: grid; place-items: center; flex-shrink: 0; position: relative;
+}
+.ring::before {
+  content: ""; position: absolute; inset: 7px;
+  background: var(--surface); border-radius: 50%;
+}
+.ring span { position: relative; font-weight: 800; font-size: 0.9rem; }
+.overall-stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.os { background: var(--bg); border-radius: 10px; padding: 7px 9px; }
+.os .n { font-weight: 800; font-size: 1rem; }
+.os .l { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.unit {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+}
+.unit-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 14px;
+  min-height: 56px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+}
+.unit-head:active { background: #f8fafc; }
+.unit-num {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--primary-soft); color: var(--primary);
+  font-weight: 800; font-size: 0.85rem;
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.unit.has-open .unit-num {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+}
+.unit-meta { flex: 1; min-width: 0; }
+.unit-title { font-weight: 700; font-size: 0.95rem; }
+.unit-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.unit-chevron {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  color: var(--muted); font-size: 1.1rem; font-weight: 700;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.unit.open .unit-chevron { transform: rotate(180deg); color: var(--primary); }
+
+.unit-body {
+  display: none;
+  padding: 0 10px 12px;
+  border-top: 1px solid var(--border);
+}
+.unit.open .unit-body { display: block; }
+
+.lesson-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  margin-top: 8px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg);
+  border: 1.5px solid transparent;
+  min-height: 52px;
+}
+.lesson-row.open-lesson {
+  background: #fff;
+  border-color: #c7d2fe;
+}
+.lesson-row.open-lesson:active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.lesson-row.locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.lr-badge {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: #e2e8f0; color: var(--muted);
+  font-weight: 800; font-size: 0.85rem;
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.lesson-row.open-lesson .lr-badge {
+  background: var(--primary-soft); color: var(--primary);
+}
+.lr-body { flex: 1; min-width: 0; }
+.lr-title { font-weight: 650; font-size: 0.88rem; }
+.lr-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.lr-bar {
+  height: 5px; background: #e2e8f0; border-radius: 99px;
+  margin-top: 6px; overflow: hidden;
+}
+.lr-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 99px;
+}
+.lr-right { text-align: right; flex-shrink: 0; }
+.lr-pct { font-weight: 800; font-size: 0.85rem; color: var(--success); }
+.lr-due { font-size: 0.68rem; color: var(--warn); font-weight: 600; margin-top: 2px; }
+.lr-due.zero { color: var(--muted); font-weight: 500; }
+.lr-chev { color: #cbd5e1; font-size: 1.15rem; margin-left: 2px; }
+
+footer {
+  text-align: center; margin-top: 24px;
+  font-size: 0.75rem; color: var(--muted); line-height: 1.5;
+}
+</style>
 </head>
 <body>
-
+<div class="wrap">
+  <header>
+    <div class="logo">B2</div>
     <h1>Speakout B2</h1>
+    <p class="sub">Vocabulary trainer · choose a unit</p>
+  </header>
 
-    <div class="dashboard-container">
-
-        <!-- UNIT 1 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 1</div>
-            <div class="lesson-grid">
-                <a href="unit-1/1A/" class="lesson-card active">1A</a>
-                <a href="unit-1/1B/" class="lesson-card active">1B</a>
-                <a href="unit-1/1C/" class="lesson-card active">1C</a>
-                <a href="unit-1/1D/" class="lesson-card locked">1D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 2 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 2</div>
-            <div class="lesson-grid">
-                <a href="unit-2/2A/" class="lesson-card locked">2A</a>
-                <a href="unit-2/2B/" class="lesson-card locked">2B</a>
-                <a href="unit-2/2C/" class="lesson-card locked">2C</a>
-                <a href="unit-2/2D/" class="lesson-card locked">2D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 3 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 3</div>
-            <div class="lesson-grid">
-                <a href="unit-3/3A/" class="lesson-card locked">3A</a>
-                <a href="unit-3/3B/" class="lesson-card locked">3B</a>
-                <a href="unit-3/3C/" class="lesson-card locked">3C</a>
-                <a href="unit-3/3D/" class="lesson-card locked">3D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 4 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 4</div>
-            <div class="lesson-grid">
-                <a href="unit-4/4A/" class="lesson-card locked">4A</a>
-                <a href="unit-4/4B/" class="lesson-card locked">4B</a>
-                <a href="unit-4/4C/" class="lesson-card locked">4C</a>
-                <a href="unit-4/4D/" class="lesson-card locked">4D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 5 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 5</div>
-            <div class="lesson-grid">
-                <a href="unit-5/5A/" class="lesson-card locked">5A</a>
-                <a href="unit-5/5B/" class="lesson-card locked">5B</a>
-                <a href="unit-5/5C/" class="lesson-card locked">5C</a>
-                <a href="unit-5/5D/" class="lesson-card locked">5D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 6 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 6</div>
-            <div class="lesson-grid">
-                <a href="unit-6/6A/" class="lesson-card locked">6A</a>
-                <a href="unit-6/6B/" class="lesson-card locked">6B</a>
-                <a href="unit-6/6C/" class="lesson-card locked">6C</a>
-                <a href="unit-6/6D/" class="lesson-card locked">6D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 7 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 7</div>
-            <div class="lesson-grid">
-                <a href="unit-7/7A/" class="lesson-card locked">7A</a>
-                <a href="unit-7/7B/" class="lesson-card locked">7B</a>
-                <a href="unit-7/7C/" class="lesson-card locked">7C</a>
-                <a href="unit-7/7D/" class="lesson-card locked">7D</a>
-            </div>
-        </div>
-
-        <!-- UNIT 8 -->
-        <div class="unit-container">
-            <div class="unit-title">Unit 8</div>
-            <div class="lesson-grid">
-                <a href="unit-8/8A/" class="lesson-card locked">8A</a>
-                <a href="unit-8/8B/" class="lesson-card locked">8B</a>
-                <a href="unit-8/8C/" class="lesson-card locked">8C</a>
-                <a href="unit-8/8D/" class="lesson-card locked">8D</a>
-            </div>
-        </div>
-
+  <section class="overall" id="overall">
+    <h2>Your progress</h2>
+    <div class="ring-row">
+      <div class="ring" id="ring" style="--pct:0"><span id="ringPct">0%</span></div>
+      <div class="overall-stats">
+        <div class="os"><div class="n" id="osLearned">0</div><div class="l">Learned</div></div>
+        <div class="os"><div class="n" id="osTotal">0</div><div class="l">Total</div></div>
+        <div class="os"><div class="n" id="osDue">0</div><div class="l">Due review</div></div>
+        <div class="os"><div class="n" id="osDiff">0</div><div class="l">Difficult</div></div>
+      </div>
     </div>
+  </section>
 
+  <div id="units"></div>
+
+  <footer>
+    Progress is saved in this browser.<br>
+    Tap a unit to expand · tap again to close.
+  </footer>
+</div>
+
+<script>
+const LESSON_DATA = {
+  '1A': {
+    title: 'Personality adjectives',
+    count: 15,
+    href: 'Speakout-B2-Lesson-1A.html',
+    storage: 'eflPhraseTrainer_SpeakoutB2_1A_v1',
+    open: true
+  },
+  '1B': {
+    title: 'Memory phrases',
+    count: 10,
+    href: 'Speakout-B2-Lesson-1B.html',
+    storage: 'eflPhraseTrainer_SpeakoutB2_1B_v1',
+    open: true
+  },
+  '1C': {
+    title: 'Likes & preferences',
+    count: 13,
+    href: 'Speakout-B2-Lesson-1C.html',
+    storage: 'eflPhraseTrainer_SpeakoutB2_1C_v1',
+    open: true
+  }
+};
+
+const UNIT_TITLES = {
+  1: 'Identity',
+  2: 'Tales',
+  3: 'Contact',
+  4: 'Jobs',
+  5: 'Solutions',
+  6: 'Emotion',
+  7: 'Success',
+  8: 'Communities',
+  9: 'History',
+  10: 'World'
+};
+
+function readProgress(key, totalHint) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return { learned: 0, difficult: 0, due: 0, total: totalHint || 0 };
+    const s = JSON.parse(raw);
+    const learned = Object.values(s.learned || {}).filter(Boolean).length;
+    const difficult = Object.values(s.difficult || {}).filter(Boolean).length;
+    const now = Date.now();
+    let due = 0;
+    const srs = s.srs || {};
+    for (const k of Object.keys(srs)) {
+      const c = srs[k];
+      if (c && c.nextReview && c.nextReview <= now) due++;
+    }
+    return { learned, difficult, due, total: Math.max(totalHint || 0, learned) };
+  } catch (e) {
+    return { learned: 0, difficult: 0, due: 0, total: totalHint || 0 };
+  }
+}
+
+function lessonRowHtml(id) {
+  const data = LESSON_DATA[id];
+  if (data && data.open) {
+    const p = readProgress(data.storage, data.count);
+    const pct = data.count ? Math.round((p.learned / data.count) * 100) : 0;
+    return (
+      '<a class="lesson-row open-lesson" href="' + data.href + '">' +
+        '<div class="lr-badge">' + id + '</div>' +
+        '<div class="lr-body">' +
+          '<div class="lr-title">' + data.title + '</div>' +
+          '<div class="lr-meta">' + p.learned + ' / ' + data.count + ' learned</div>' +
+          '<div class="lr-bar"><div class="lr-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>' +
+        '<div class="lr-right">' +
+          '<div class="lr-pct">' + pct + '%</div>' +
+          '<div class="lr-due ' + (p.due ? '' : 'zero') + '">' + (p.due ? p.due + ' due' : 'up to date') + '</div>' +
+        '</div>' +
+        '<span class="lr-chev">›</span>' +
+      '</a>'
+    );
+  }
+  return (
+    '<div class="lesson-row locked">' +
+      '<div class="lr-badge">' + id + '</div>' +
+      '<div class="lr-body">' +
+        '<div class="lr-title">Lesson ' + id + '</div>' +
+        '<div class="lr-meta">Coming soon</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function unitStats(unitNum) {
+  let learned = 0, total = 0, due = 0, openCount = 0;
+  for (const L of ['A', 'B', 'C', 'D']) {
+    const id = unitNum + L;
+    const data = LESSON_DATA[id];
+    if (data && data.open) {
+      openCount++;
+      const p = readProgress(data.storage, data.count);
+      learned += p.learned;
+      total += data.count;
+      due += p.due;
+    }
+  }
+  return { learned, total, due, openCount };
+}
+
+function render() {
+  const root = document.getElementById('units');
+  root.innerHTML = '';
+
+  let sumL = 0, sumT = 0, sumD = 0, sumDiff = 0;
+
+  for (let u = 1; u <= 10; u++) {
+    const stats = unitStats(u);
+    sumL += stats.learned;
+    sumT += stats.total;
+    sumD += stats.due;
+
+    let unitDiff = 0;
+    for (const L of ['A', 'B', 'C', 'D']) {
+      const id = u + L;
+      const data = LESSON_DATA[id];
+      if (data && data.open) unitDiff += readProgress(data.storage, data.count).difficult;
+    }
+    sumDiff += unitDiff;
+
+    const hasOpen = stats.openCount > 0;
+    const unit = document.createElement('div');
+    unit.className = 'unit' + (hasOpen ? ' has-open' : '');
+    unit.dataset.unit = String(u);
+
+    const saved = sessionStorage.getItem('speakout_unit_open_' + u);
+    if (saved === '1' || (saved === null && u === 1 && hasOpen)) {
+      unit.classList.add('open');
+    }
+
+    const subParts = [];
+    if (stats.openCount) {
+      subParts.push(stats.learned + '/' + stats.total + ' learned');
+      if (stats.due) subParts.push(stats.due + ' due');
+    } else {
+      subParts.push('Coming soon');
+    }
+
+    unit.innerHTML =
+      '<button type="button" class="unit-head" aria-expanded="' + unit.classList.contains('open') + '">' +
+        '<div class="unit-num">U' + u + '</div>' +
+        '<div class="unit-meta">' +
+          '<div class="unit-title">Unit ' + u + (UNIT_TITLES[u] ? ' · ' + UNIT_TITLES[u] : '') + '</div>' +
+          '<div class="unit-sub">' + subParts.join(' · ') + '</div>' +
+        '</div>' +
+        '<span class="unit-chevron">▾</span>' +
+      '</button>' +
+      '<div class="unit-body">' +
+        ['A', 'B', 'C', 'D'].map(function(L) { return lessonRowHtml(u + L); }).join('') +
+      '</div>';
+
+    unit.querySelector('.unit-head').addEventListener('click', function() {
+      var open = unit.classList.toggle('open');
+      unit.querySelector('.unit-head').setAttribute('aria-expanded', open ? 'true' : 'false');
+      sessionStorage.setItem('speakout_unit_open_' + u, open ? '1' : '0');
+    });
+
+    root.appendChild(unit);
+  }
+
+  var pct = sumT ? Math.round((sumL / sumT) * 100) : 0;
+  document.getElementById('ring').style.setProperty('--pct', pct);
+  document.getElementById('ringPct').textContent = pct + '%';
+  document.getElementById('osLearned').textContent = sumL;
+  document.getElementById('osTotal').textContent = sumT;
+  document.getElementById('osDue').textContent = sumD;
+  document.getElementById('osDiff').textContent = sumDiff;
+}
+
+render();
+</script>
 </body>
 </html>

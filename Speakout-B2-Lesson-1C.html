@@ -522,6 +522,145 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
 .prac-practice-block { margin-top: 8px; padding: 10px; }
 .prac-practice-block .tab { padding: 8px 12px; font-size: 12px; min-height: 40px; }
 
+
+/* Match: two columns */
+.match-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.match-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.match-tile {
+  text-align: left;
+  padding: 12px 10px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.35;
+  min-height: 48px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+.match-term { font-weight: 700; color: var(--primary); }
+.match-def { color: var(--text); font-weight: 500; }
+.match-tile.selected {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+}
+.match-tile.matched {
+  opacity: 0.4;
+  pointer-events: none;
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+.score-bar .muted { color: var(--muted); font-size: 0.78rem; }
+
+/* Quiz / gap options */
+.quiz-prompt {
+  background: #f1f5f9;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 10px 0 12px;
+}
+.quiz-prompt-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.quiz-term {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #059669;
+  line-height: 1.3;
+}
+.gap-sentence-big {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+.gap-blank {
+  display: inline-block;
+  min-width: 4.5em;
+  border-bottom: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+.gap-ex {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  padding: 14px 14px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  min-height: 48px;
+  width: 100%;
+}
+.quiz-opt:active { border-color: var(--primary); background: var(--primary-soft); }
+.quiz-letter {
+  font-weight: 800;
+  color: var(--primary);
+  flex-shrink: 0;
+  min-width: 1.5em;
+}
+.quiz-opt.correct {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+.quiz-opt.wrong {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+/* Mode view takes more screen */
+#viewMode.active {
+  min-height: calc(100dvh - 120px);
+}
+#viewMode .mode-wrap, #modeContent {
+  min-height: 60vh;
+}
+#modeContent {
+  padding-bottom: 24px;
+}
+
+/* YouGlish compact but readable */
+#youglishBox {
+  max-width: 100%;
+}
+.yg-video-frame {
+  min-height: 160px !important;
+  max-height: 220px !important;
+  aspect-ratio: 16 / 10;
+}
+.yg-idle {
+  min-height: 88px !important;
+  padding: 12px !important;
+}
+.yg-idle .yg-play {
+  width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  font-size: 18px !important;
+}
+
 /* ===== APP SHELL ===== */
 #app {
   display: flex;
@@ -1589,6 +1728,228 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
   font-weight: 600;
   margin: 8px 0 10px;
 }
+
+#youglishBox .yg-header { display: none !important; }
+.yg-video-frame {
+  height: 280px !important;
+  min-height: 280px !important;
+  max-height: 340px !important;
+  aspect-ratio: auto !important;
+  overflow: hidden !important;
+}
+#youglishFrame {
+  position: absolute !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 460px !important;
+  top: -72px !important;
+  border: 0 !important;
+}
+#yg-widget iframe {
+  width: 100% !important;
+  height: 460px !important;
+  margin-top: -72px !important;
+  border: 0 !important;
+}
+
+
+.order-chip.kw, .order-tile.kw {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border-color: #6ee7b7 !important;
+  font-weight: 800;
+}
+.kw-inline {
+  color: #059669;
+  font-weight: 800;
+}
+/* YouGlish: show player + next controls, less aggressive crop */
+.yg-video-frame {
+  height: 300px !important;
+  min-height: 300px !important;
+  max-height: 360px !important;
+  overflow: hidden !important;
+}
+#youglishFrame {
+  top: -72px !important;
+  height: 460px !important;
+}
+#yg-widget iframe {
+  margin-top: -72px !important;
+  height: 460px !important;
+}
+#youglishBox .yg-header {
+  display: flex !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+}
+
+
+/* YouGlish full controls visible */
+#youglishBox .yg-header {
+  display: flex !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+}
+.yg-video-frame {
+  height: 340px !important;
+  min-height: 340px !important;
+  max-height: 420px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #000 !important;
+}
+/* Minimal top offset — keep accent/region bar + next/prev visible */
+#youglishFrame {
+  position: absolute !important;
+  left: 0 !important;
+  width: 100% !important;
+  top: -8px !important;
+  height: 360px !important;
+  border: 0 !important;
+}
+#yg-widget {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+}
+#yg-widget iframe {
+  width: 100% !important;
+  height: 360px !important;
+  margin-top: 0 !important;
+  border: 0 !important;
+}
+
+
+/* YouGlish reliable layout */
+#youglishBox {
+  display: flex !important;
+  flex-direction: column;
+  margin: 8px 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1.5px solid #334155;
+  position: relative;
+  z-index: 2;
+}
+#youglishBox .yg-header {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px !important;
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  z-index: 5;
+}
+.yg-idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 12px !important;
+  min-height: 96px !important;
+  color: #e2e8f0;
+  text-align: center;
+}
+#youglishBox.playing .yg-idle { display: none !important; }
+.yg-video-frame {
+  display: none;
+  position: relative !important;
+  width: 100% !important;
+  height: 320px !important;
+  min-height: 320px !important;
+  max-height: 400px !important;
+  background: #000 !important;
+  overflow: hidden !important;
+}
+#youglishBox.playing .yg-video-frame,
+#youglishBox.playing #ygFrameWrap {
+  display: block !important;
+}
+#youglishFrame {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  background: #000;
+}
+#yg-widget {
+  position: absolute !important;
+  left: 0; top: 0;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+}
+#yg-widget iframe {
+  width: 100% !important;
+  min-height: 300px !important;
+  border: 0 !important;
+  margin: 0 !important;
+}
+#yg-loading, #yg-fallback {
+  position: absolute !important;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 13px;
+  text-align: center;
+  padding: 12px;
+  z-index: 4;
+  background: rgba(15,23,42,0.92);
+}
+
+
+/* YouGlish nav like YouTube */
+.yg-hdr-btns {
+  display: flex !important;
+  align-items: center;
+  gap: 6px !important;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.yg-nav-btn {
+  min-height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  background: #4f46e5 !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center;
+}
+.yg-nav-btn:active { opacity: 0.85; }
+#yg-prev-btn {
+  background: #334155 !important;
+}
+#yg-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 6px;
+}
+#youglishBox .yg-header {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 6px;
+  row-gap: 8px;
+}
+
 </style>
 </head>
 <body>
@@ -1705,9 +2066,11 @@ img { max-width: 100%; height: auto; -webkit-user-drag: none; }
       </div>
 
       <div id="youglishBox" aria-live="polite">
-        <div class="yg-header">
+                <div class="yg-header">
           <span id="yg-title">Real speech examples</span>
           <span class="yg-hdr-btns">
+            <button type="button" id="yg-prev-btn" class="yg-nav-btn" title="Previous">◀</button>
+            <button type="button" id="yg-next-btn" class="yg-nav-btn" title="Next video">Next ▶</button>
             <a id="yg-open-link" href="#" target="_blank" rel="noopener">Open ↗</a>
           </span>
         </div>
@@ -2372,6 +2735,8 @@ function showView(name) {
     }
   }
   updateStats();
+
+  try { updateHeaderNav(); } catch (e) {}
 }
 
 function openModal(html) {
@@ -2464,39 +2829,86 @@ async function openPhotoFinder() {
   sheet.classList.add('open');
   grid.innerHTML = '';
   if (status) status.textContent = 'Finding photos…';
+
   const q = (currentWord.imgQuery || currentWord.term || '').trim();
   const meaning = (currentWord.definition || '').split(/[.,;]/)[0].trim();
-  const query = encodeURIComponent(q + (meaning ? ' ' + meaning.split(' ').slice(0, 4).join(' ') : ''));
+  const searchQ = (q + ' ' + meaning.split(/\s+/).slice(0, 3).join(' ')).trim();
+  const photos = [];
+
+  // 1) Wikimedia Commons (CORS-friendly)
   try {
-    const url = 'https://api.openverse.org/v1/images/?q=' + query + '&page_size=9&filter_dead=true';
+    const url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' +
+      encodeURIComponent(searchQ) +
+      '&gsrlimit=12&gsrnamespace=6&prop=imageinfo&iiprop=url|thumburl|mime&iiurlwidth=240&format=json&origin=*';
     const res = await fetch(url);
-    if (!res.ok) throw new Error('search failed');
-    const data = await res.json();
-    const results = (data.results || []).filter(r => r.url || r.thumbnail);
-    if (!results.length) {
-      if (status) status.textContent = 'No photos found — try Device or Google';
-      return;
-    }
-    if (status) status.textContent = 'Tap a photo to attach';
-    results.forEach(r => {
-      const src = r.thumbnail || r.url;
-      const full = r.url || r.thumbnail;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.innerHTML = '<img src="' + src + '" alt="" loading="lazy">';
-      btn.addEventListener('click', () => {
-        setWordImage(currentWord, full);
-        sheet.classList.remove('open');
-        refreshPracticeVisual();
-        const rm = $('btnImgRemove');
-        if (rm) rm.style.display = 'inline-flex';
+    if (res.ok) {
+      const data = await res.json();
+      const pages = (data.query && data.query.pages) || {};
+      Object.keys(pages).forEach(k => {
+        const p = pages[k];
+        const ii = p.imageinfo && p.imageinfo[0];
+        if (!ii) return;
+        if (ii.mime && ii.mime.indexOf('image/') !== 0) return;
+        const thumb = ii.thumburl || ii.url;
+        const full = ii.url || ii.thumburl;
+        if (thumb) photos.push({ thumb, full });
       });
-      grid.appendChild(btn);
-    });
-  } catch (e) {
-    if (status) status.textContent = 'Could not search — use Device or Google';
+    }
+  } catch (e) {}
+
+  // 2) Openverse fallback
+  if (photos.length < 6) {
+    try {
+      const url = 'https://api.openverse.org/v1/images/?q=' + encodeURIComponent(q || searchQ) + '&page_size=12';
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        (data.results || []).forEach(r => {
+          const thumb = r.thumbnail || r.url;
+          const full = r.url || r.thumbnail;
+          if (thumb) photos.push({ thumb, full });
+        });
+      }
+    } catch (e) {}
   }
+
+  // 3) Lorem Flickr topical (always fills)
+  if (photos.length < 3) {
+    const tag = encodeURIComponent((q || 'english').split(/\s+/)[0]);
+    for (let i = 0; i < 9; i++) {
+      const src = 'https://loremflickr.com/240/240/' + tag + '?lock=' + (i + 11);
+      photos.push({ thumb: src, full: src });
+    }
+  }
+
+  const seen = {};
+  const unique = photos.filter(p => {
+    if (seen[p.thumb]) return false;
+    seen[p.thumb] = true;
+    return true;
+  }).slice(0, 12);
+
+  if (!unique.length) {
+    if (status) status.textContent = 'No photos found — try Device or Google';
+    return;
+  }
+  if (status) status.textContent = 'Tap a photo to attach';
+  unique.forEach(p => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.innerHTML = '<img src="' + p.thumb + '" alt="" loading="lazy" referrerpolicy="no-referrer">';
+    btn.addEventListener('click', () => {
+      setWordImage(currentWord, p.full);
+      sheet.classList.remove('open');
+      refreshPracticeVisual();
+      const rm = $('btnImgRemove');
+      if (rm) rm.style.display = 'inline-flex';
+    });
+    grid.appendChild(btn);
+  });
 }
+
+
 function closePhotoFinder() {
   const sheet = $('photoSheet');
   if (sheet) sheet.classList.remove('open');
@@ -2519,7 +2931,6 @@ function updateHeaderNav() {
     home.dataset.nav = 'grid';
     home.textContent = '←';
   } else {
-    // word list → main index
     const path = location.pathname || '';
     if (/\/unit-\d\//i.test(path)) home.href = '../../index.html';
     else if (/\/1[ABC]\/?$/i.test(path)) home.href = '../index.html';
@@ -2530,28 +2941,332 @@ function updateHeaderNav() {
   }
 }
 function goBackStep() {
-  hideYouGlish();
-  closePhotoFinder();
-  if ($('practicePanel') && $('practicePanel').classList.contains('active')) {
-    // step 1: word → lesson list
+  try { hideYouGlish(); } catch (e) {}
+  try { closePhotoFinder(); } catch (e) {}
+  const onPractice = $('practicePanel') && $('practicePanel').classList.contains('active');
+  const onMode = $('viewMode') && $('viewMode').classList.contains('active');
+  if (onPractice || onMode) {
+    // Exercise / word card → lesson tasks + word list
     if (typeof selectLesson === 'function') {
       try { selectLesson(state.currentLesson || '1A'); } catch (e) { showView('Grid'); }
     } else {
       showView('Grid');
     }
     updateHeaderNav();
-    return;
+    try {
+      const main = $('main');
+      if (main) main.scrollTop = 0;
+      window.scrollTo(0, 0);
+    } catch (e) {}
+    return false;
   }
-  if ($('viewMode') && $('viewMode').classList.contains('active')) {
-    if (typeof selectLesson === 'function') {
-      try { selectLesson(state.currentLesson || '1A'); } catch (e) { showView('Grid'); }
-    } else showView('Grid');
-    updateHeaderNav();
-    return;
-  }
-  // already on grid → home
-  location.href = $('btnHome') ? $('btnHome').href : 'index.html';
+  // Word list → main index
+  const href = (function() {
+    const path = location.pathname || '';
+    if (/\/unit-\d\//i.test(path)) return '../../index.html';
+    if (/\/1[ABC]\/?$/i.test(path)) return '../index.html';
+    return 'index.html';
+  })();
+  location.href = href;
+  return false;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== YouGlish (official JS API: fetch + next + previous) ===== */
+var ygWidget = null;
+var ygReady = false;
+var ygLastTerm = '';
+var ygBaseTerm = '';
+var ygResultIndex = 0;
+var ygTotalTracks = 0;
+var ygTimer = null;
+var ygPendingTerm = null;
+
+function youglishQuery(term, word) {
+  const t = String(term || '').trim();
+  if (!t) return '';
+  if (/\s/.test(t)) return t;
+  return t; // same term only — better for next() playlist
+}
+function ygUrl(term) {
+  const q = encodeURIComponent(String(term || '').trim()).replace(/%20/g, '+');
+  return 'https://youglish.com/pronounce/' + q + '/english';
+}
+function ygSetLinks(term) {
+  const url = ygUrl(term);
+  const a1 = $('yg-open-link');
+  const a2 = $('yg-fallback-link');
+  if (a1) a1.href = url;
+  if (a2) a2.href = url;
+}
+function updateYgIndexLabel() {
+  const title = $('yg-title');
+  if (!title) return;
+  const base = ygBaseTerm || ygLastTerm || '';
+  const short = base.length > 22 ? base.slice(0, 20) + '…' : base;
+  if (ygTotalTracks > 0) {
+    title.textContent = 'YouGlish · “' + short + '” · ' + (ygResultIndex + 1) + ' / ' + ygTotalTracks;
+  } else {
+    title.textContent = 'YouGlish · “' + short + '” · clip ' + (ygResultIndex + 1);
+  }
+}
+function ygShowOnly(which) {
+  const loading = $('yg-loading');
+  const frame = $('youglishFrame');
+  const widget = $('yg-widget');
+  const fallback = $('yg-fallback');
+  if (loading) loading.style.display = which === 'loading' ? 'flex' : 'none';
+  if (frame) frame.style.display = which === 'frame' ? 'block' : 'none';
+  if (widget) widget.style.display = which === 'widget' ? 'block' : 'none';
+  if (fallback) fallback.style.display = which === 'fallback' ? 'flex' : 'none';
+}
+function onYgFetchDone(event) {
+  try {
+    ygTotalTracks = (event && event.totalResult) ? event.totalResult : 0;
+    ygResultIndex = 0;
+    updateYgIndexLabel();
+    ygShowOnly('widget');
+  } catch (e) {}
+}
+function onYgVideoChange(event) {
+  try {
+    if (event && typeof event.trackNumber === 'number') {
+      ygResultIndex = event.trackNumber;
+    }
+    updateYgIndexLabel();
+    ygShowOnly('widget');
+  } catch (e) {}
+}
+function onYgError() {
+  // fall back to Open link UI
+  ygShowOnly('fallback');
+}
+function ensureYgWidget() {
+  if (ygWidget) return ygWidget;
+  if (!window.YG || !window.YG.Widget) return null;
+  const host = $('yg-widget');
+  if (!host) return null;
+  host.innerHTML = '';
+  const box = $('youglishBox');
+  const w = Math.min(520, Math.max(280, (box && box.clientWidth) || window.innerWidth || 360) - 8);
+  ygWidget = new YG.Widget('yg-widget', {
+    width: w,
+    components: 255,
+    autoStart: 1,
+    events: {
+      onFetchDone: onYgFetchDone,
+      onVideoChange: onYgVideoChange,
+      onError: onYgError
+    }
+  });
+  ygReady = true;
+  return ygWidget;
+}
+function prepareYouGlishIdle(term) {
+  const box = $('youglishBox');
+  if (!box) return;
+  ygBaseTerm = term || (currentWord && currentWord.term) || '';
+  ygLastTerm = ygBaseTerm;
+  ygResultIndex = 0;
+  ygTotalTracks = 0;
+  ygSetLinks(ygBaseTerm);
+  updateYgIndexLabel();
+  box.classList.remove('playing');
+  box.classList.add('visible');
+  const frame = $('youglishFrame');
+  if (frame) {
+    frame.onload = null;
+    frame.onerror = null;
+    frame.src = 'about:blank';
+    frame.style.display = 'none';
+  }
+  const idle = $('ygIdle');
+  if (idle) idle.style.display = 'flex';
+  const wrap = $('ygFrameWrap');
+  if (wrap) wrap.style.display = 'none';
+  if (ygTimer) { clearTimeout(ygTimer); ygTimer = null; }
+}
+function hideYouGlish() {
+  const box = $('youglishBox');
+  if (ygTimer) clearTimeout(ygTimer);
+  if (box) box.classList.remove('playing');
+  const frame = $('youglishFrame');
+  if (frame) {
+    frame.onload = null;
+    frame.onerror = null;
+    frame.src = 'about:blank';
+  }
+  const idle = $('ygIdle');
+  if (idle) idle.style.display = 'flex';
+  const wrap = $('ygFrameWrap');
+  if (wrap) wrap.style.display = 'none';
+}
+function loadYouGlish(term) {
+  if (!term && currentWord) term = currentWord.term;
+  if (!term) return;
+  const box = $('youglishBox');
+  if (!box) return;
+
+  ygBaseTerm = (currentWord && currentWord.term) ? currentWord.term : term;
+  ygLastTerm = ygBaseTerm;
+  ygResultIndex = 0;
+  ygTotalTracks = 0;
+  ygSetLinks(ygBaseTerm);
+  updateYgIndexLabel();
+
+  box.classList.add('visible');
+  box.classList.add('playing');
+  const idle = $('ygIdle');
+  if (idle) idle.style.display = 'none';
+  const wrap = $('ygFrameWrap');
+  if (wrap) wrap.style.display = 'block';
+  ygShowOnly('loading');
+  const loadingText = $('yg-loading-text');
+  if (loadingText) loadingText.textContent = 'Loading examples of “' + ygBaseTerm + '”…';
+  try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+
+  // Wait for API if needed
+  if (!window.YG || !window.YG.Widget) {
+    ygPendingTerm = ygBaseTerm;
+    // retry a few times while widget.js loads
+    let tries = 0;
+    if (ygTimer) clearInterval(ygTimer);
+    ygTimer = setInterval(function () {
+      tries++;
+      if (window.YG && window.YG.Widget) {
+        clearInterval(ygTimer);
+        ygTimer = null;
+        loadYouGlish(ygPendingTerm);
+      } else if (tries > 20) {
+        clearInterval(ygTimer);
+        ygTimer = null;
+        ygShowOnly('fallback');
+      }
+    }, 250);
+    return;
+  }
+
+  try {
+    const w = ensureYgWidget();
+    if (!w) {
+      ygShowOnly('fallback');
+      return;
+    }
+    ygShowOnly('widget');
+    const loading = $('yg-loading');
+    if (loading) loading.style.display = 'flex';
+    // Official API: loads first track for this exact term
+    w.fetch(ygBaseTerm, 'english');
+    // Safety: clear loading after a few seconds even if events lag
+    setTimeout(function () {
+      if (loading) loading.style.display = 'none';
+      ygShowOnly('widget');
+    }, 2500);
+  } catch (e) {
+    console.warn('YouGlish load error', e);
+    ygShowOnly('fallback');
+  }
+}
+function ygNavigate(dir) {
+  const term = ygBaseTerm || ygLastTerm || (currentWord && currentWord.term) || '';
+  if (!term) return;
+
+  // Ensure playing + widget exists
+  const box = $('youglishBox');
+  if (!box || !box.classList.contains('playing')) {
+    loadYouGlish(term);
+    return;
+  }
+
+  const w = ensureYgWidget();
+  if (!w) {
+    ygShowOnly('fallback');
+    return;
+  }
+
+  try {
+    if (dir > 0) {
+      // Official API — next video with the SAME search term
+      if (typeof w.next === 'function') {
+        w.next();
+        ygResultIndex = Math.min(ygResultIndex + 1, Math.max(0, ygTotalTracks - 1));
+        updateYgIndexLabel();
+        return;
+      }
+    } else {
+      if (typeof w.previous === 'function') {
+        w.previous();
+        ygResultIndex = Math.max(0, ygResultIndex - 1);
+        updateYgIndexLabel();
+        return;
+      }
+      // some builds use prev()
+      if (typeof w.prev === 'function') {
+        w.prev();
+        ygResultIndex = Math.max(0, ygResultIndex - 1);
+        updateYgIndexLabel();
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn('ygNavigate', e);
+  }
+
+  // If next() missing (shouldn't on current API), re-fetch and step
+  try {
+    w.fetch(term, 'english');
+    if (dir > 0 && typeof w.next === 'function') {
+      setTimeout(function () {
+        for (let i = 0; i < ygResultIndex + 1; i++) {
+          try { w.next(); } catch (e2) {}
+        }
+        updateYgIndexLabel();
+      }, 800);
+    }
+  } catch (e) {
+    ygShowOnly('fallback');
+  }
+}
+function showYgIframe(term) {
+  // kept as soft fallback only
+  ygShowOnly('fallback');
+  ygSetLinks(term);
+}
+
+// When widget.js finishes loading
+window.onYouglishAPIReady = function () {
+  ygReady = true;
+  if (ygPendingTerm) {
+    const t = ygPendingTerm;
+    ygPendingTerm = null;
+    loadYouGlish(t);
+  }
+};
 
 function openPractice(w) {
   currentWord = w;
@@ -2724,6 +3439,19 @@ function hangRevealOne() {
 function tokenizePhrase(term) {
   return (term || '').trim().split(/\s+/).filter(Boolean);
 }
+function tokenizeForOrder(term) {
+  const words = tokenizePhrase(term);
+  if (words.length > 1) return words;
+  // Single word → letter tiles so Order works on every lesson
+  const raw = (term || '').replace(/\s+/g, '');
+  return raw ? raw.split('') : [];
+}
+function orderTargetString(term) {
+  const words = tokenizePhrase(term);
+  if (words.length > 1) return words.join(' ').toLowerCase();
+  return (term || '').replace(/\s+/g, '').toLowerCase();
+}
+
 
 function setupOrder() {
   const w = currentWord;
@@ -3030,168 +3758,27 @@ function startListen(onResult, onError, statusEl) {
 }
 
 /* ---------- YouGlish (always-visible panel + widget / iframe / open link) ---------- */
-let ygWidget = null;
-let ygReady = false;
+
+
 let ygPending = null;
-let ygLastTerm = '';
-let ygTimer = null;
 
-function ygUrl(term) {
-  return 'https://youglish.com/pronounce/' + encodeURIComponent(term).replace(/%20/g, '+') + '/english';
-}
 
-function ygSetLinks(term) {
-  const url = ygUrl(term);
-  const a1 = $('yg-open-link');
-  const a2 = $('yg-fallback-link');
-  if (a1) a1.href = url;
-  if (a2) a2.href = url;
-  const title = $('yg-title');
-  if (title) title.textContent = 'YouGlish · “' + term + '”';
-}
 
-function ygShowOnly(which) {
-  const loading = $('yg-loading');
-  const frame = $('youglishFrame');
-  const widget = $('yg-widget');
-  const fallback = $('yg-fallback');
-  if (loading) loading.style.display = which === 'loading' ? 'flex' : 'none';
-  if (frame) frame.style.display = which === 'frame' ? 'block' : 'none';
-  if (widget) widget.style.display = which === 'widget' ? 'block' : 'none';
-  if (fallback) fallback.style.display = which === 'fallback' ? 'flex' : 'none';
-}
 
-function prepareYouGlishIdle(term) {
-  const box = $('youglishBox');
-  if (!box) return;
-  ygLastTerm = term || '';
-  ygSetLinks(term || '');
-  box.classList.remove('playing');
-  box.classList.add('visible');
-  // stop any playing iframe
-  const frame = $('youglishFrame');
-  if (frame) { frame.src = 'about:blank'; frame.style.display = 'none'; }
-  const widget = $('yg-widget');
-  if (widget) { widget.innerHTML = ''; widget.style.display = 'none'; }
-  const idle = $('ygIdle');
-  if (idle) idle.style.display = 'flex';
-  const wrap = $('ygFrameWrap');
-  if (wrap) wrap.style.display = 'none';
-}
-function loadYouGlish(term) {
-  if (!term) return;
-  const box = $('youglishBox');
-  if (!box) return;
-  ygLastTerm = term;
-  ygSetLinks(term);
-  box.classList.add('visible');
-  box.classList.add('playing');
-  const idle=$('ygIdle'); if(idle) idle.style.display='none';
-  const wrap=$('ygFrameWrap'); if(wrap) wrap.style.display='block';
-  ygShowOnly('loading');
-  const loadingText = $('yg-loading-text');
-  if (loadingText) loadingText.textContent = 'Loading real examples of “' + term + '”…';
 
-  // Scroll panel into view so it’s never off-screen on iPhone
-  try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
 
-  if (ygTimer) clearTimeout(ygTimer);
 
-  // 1) Official widget when available
-  if (window.YG) {
-    try {
-      if (!ygWidget) {
-        ygWidget = new YG.Widget('yg-widget', {
-          width: Math.min(480, Math.max(280, (box.clientWidth || window.innerWidth || 360) - 8)),
-          components: 255,
-          events: {
-            onFetchDone: function () {
-              ygShowOnly('widget');
-            },
-            onError: function () {
-              tryIframeOrFallback(term);
-            }
-          }
-        });
-        ygReady = true;
-      }
-      ygShowOnly('widget');
-      const loading = $('yg-loading');
-      if (loading) loading.style.display = 'block';
-      ygWidget.fetch(term, 'english');
-      // If widget stays empty, fall back
-      ygTimer = setTimeout(() => {
-        const w = $('yg-widget');
-        if (w && w.children.length === 0) tryIframeOrFallback(term);
-        else ygShowOnly('widget');
-      }, 3500);
-      return;
-    } catch (e) {
-      console.warn('YG widget', e);
-    }
-  }
 
-  // 2) Widget script not ready yet — queue and try iframe
-  ygPending = term;
-  tryIframeOrFallback(term);
-}
 
-function tryIframeOrFallback(term) {
-  const frame = $('youglishFrame');
-  // Many mobile browsers block YouGlish in iframes (X-Frame-Options).
-  // Still try briefly; always keep Open link available.
-  if (frame) {
-    ygShowOnly('frame');
-    const loading = $('yg-loading');
-    if (loading) loading.style.display = 'block';
-    frame.onload = function () {
-      // Cross-origin: we can't read content; assume it may be blank on iOS
-      setTimeout(() => {
-        // On file:// or strict mobile, show fallback UI under the frame
-        const isRestricted = /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
-          location.protocol === 'file:';
-        if (isRestricted) {
-          ygShowOnly('fallback');
-        } else {
-          ygShowOnly('frame');
-        }
-      }, 800);
-    };
-    frame.onerror = function () { ygShowOnly('fallback'); };
-    frame.src = ygUrl(term) + '?t=' + Date.now();
-    ygTimer = setTimeout(() => {
-      // Ensure something visible
-      if ($('youglishBox') && $('youglishBox').classList.contains('visible')) {
-        const isRestricted = /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
-          location.protocol === 'file:';
-        if (isRestricted) ygShowOnly('fallback');
-        else {
-          const loading = $('yg-loading');
-          if (loading) loading.style.display = 'none';
-        }
-      }
-    }, 2800);
-  } else {
-    ygShowOnly('fallback');
-  }
-}
 
-function hideYouGlish() {
-  const box = $('youglishBox');
-  const frame = $('youglishFrame');
-  if (ygTimer) clearTimeout(ygTimer);
-  if (box) box.classList.remove('visible');
-  if (frame) {
-    frame.onload = null;
-    frame.onerror = null;
-    frame.src = 'about:blank';
-  }
-  ygShowOnly('loading');
-  ygLastTerm = '';
-  if ($('btnYouglish')) $('btnYouglish').classList.remove('btn-primary');
-  const rmBtn = $('btnImgRemove');
-  if (rmBtn) rmBtn.style.display = (currentWord && (currentWord.image || (state.wordImages && state.wordImages[termKey(currentWord)]))) ? 'inline-flex' : 'none';
-}
+
+
+
+
+
+
+
+
 
 function onYouglishAPIReady() {
   ygReady = true;
@@ -3274,173 +3861,399 @@ function startFlashcards() {
 
 function startMatch() {
   if (!requireLesson()) return;
-  const pairs = shuffle(words.slice()).slice(0, Math.min(6, words.length));
-  const terms = pairs.map(w => ({ type: 't', text: w.term, id: w.term }));
-  const defs = pairs.map(w => ({ type: 'd', text: w.definition, id: w.term }));
-  const tiles = shuffle(terms.concat(defs));
-  let selected = null;
-  let matched = 0;
+  const all = shuffle(words.slice());
+  let batchStart = 0;
+  const BATCH = 6;
   const content = $('modeContent');
-  function render() {
-    content.innerHTML =
-      '<div class="score-bar"><span>Matched: <strong>' + matched + '</strong> / ' + pairs.length + '</span></div>' +
-      '<div class="match-board" id="matchBoard"></div>';
-    const board = $('matchBoard');
-    tiles.forEach((tile, i) => {
-      const b = document.createElement('button');
-      b.className = 'match-tile' + (tile.matched ? ' matched' : '') + (selected === i ? ' selected' : '');
-      b.textContent = tile.text.length > 80 ? tile.text.slice(0, 78) + '…' : tile.text;
-      b.dataset.i = i;
-      if (!tile.matched) {
-        b.onclick = () => {
-          if (selected === null) {
-            selected = i;
-            render();
-          } else if (selected === i) {
-            selected = null;
-            render();
-          } else {
-            const a = tiles[selected];
-            const c = tiles[i];
-            if (a.id === c.id && a.type !== c.type) {
-              a.matched = c.matched = true;
-              matched++;
-              selected = null;
-              addPoints(8);
-              bumpDaily();
-              render();
-              if (matched === pairs.length) {
-                setTimeout(() => {
-                  content.innerHTML += '<div class="feedback show ok" style="margin-top:12px">All matched! Nice work.</div>';
-                }, 200);
-              }
-            } else {
-              // wrong flash
-              const elA = board.children[selected];
-              const elB = board.children[i];
-              if (elA) elA.classList.add('wrong');
-              if (elB) elB.classList.add('wrong');
-              setTimeout(() => { selected = null; render(); }, 450);
-            }
-          }
-        };
-      }
-      board.appendChild(b);
+  let selected = null; // { side, id, el }
+  let termOrder = [];
+  let defOrder = [];
+
+  function currentBatch() {
+    return all.slice(batchStart, batchStart + BATCH);
+  }
+
+  function buildOrders() {
+    const pairs = currentBatch();
+    pairs.forEach(w => { w._matched = false; });
+    termOrder = pairs.slice();
+    defOrder = shuffle(pairs.slice());
+    selected = null;
+  }
+
+  function paintSelection() {
+    qsa('#matchTerms .match-tile, #matchDefs .match-tile').forEach(b => {
+      b.classList.remove('selected', 'wrong-flash');
+      const id = b.dataset.id;
+      const side = b.dataset.side;
+      if (selected && selected.id === id && selected.side === side) b.classList.add('selected');
+      if (b.dataset.matched === '1') b.classList.add('matched');
     });
   }
-  setTitle('Match');
+
+  function render(full) {
+    const pairs = currentBatch();
+    const totalBatches = Math.ceil(all.length / BATCH) || 1;
+    const batchNum = Math.floor(batchStart / BATCH) + 1;
+    const matched = pairs.filter(w => w._matched).length;
+
+    if (full || !$('matchBoard')) {
+      content.innerHTML =
+        '<div class="score-bar">' +
+          '<span>Matched: <strong id="matchCount">' + matched + '</strong> / ' + pairs.length + '</span>' +
+          '<span class="muted">Page ' + batchNum + ' / ' + totalBatches + '</span>' +
+        '</div>' +
+        '<div class="match-cols" id="matchBoard">' +
+          '<div class="match-col" id="matchTerms"></div>' +
+          '<div class="match-col" id="matchDefs"></div>' +
+        '</div>' +
+        '<div id="matchMsg" class="feedback" style="display:none"></div>' +
+        '<div class="prac-actions" style="margin-top:12px">' +
+          '<button type="button" class="btn btn-sm" id="matchSkip">Skip page →</button>' +
+        '</div>';
+
+      const termCol = $('matchTerms');
+      const defCol = $('matchDefs');
+      termOrder.forEach(w => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'match-tile match-term' + (w._matched ? ' matched' : '');
+        b.textContent = w.term;
+        b.dataset.id = w.term;
+        b.dataset.side = 't';
+        b.dataset.matched = w._matched ? '1' : '0';
+        b.onclick = () => onPick('t', w.term, b);
+        termCol.appendChild(b);
+      });
+      defOrder.forEach(w => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'match-tile match-def' + (w._matched ? ' matched' : '');
+        const txt = w.definition || '';
+        b.textContent = txt.length > 90 ? txt.slice(0, 88) + '…' : txt;
+        b.dataset.id = w.term;
+        b.dataset.side = 'd';
+        b.dataset.matched = w._matched ? '1' : '0';
+        b.onclick = () => onPick('d', w.term, b);
+        defCol.appendChild(b);
+      });
+      const sk = $('matchSkip');
+      if (sk) sk.onclick = () => {
+        if (batchStart + BATCH < all.length) {
+          batchStart += BATCH;
+          buildOrders();
+          render(true);
+        } else {
+          content.innerHTML = '<div class="empty-state">All pages done.</div>';
+        }
+      };
+    } else {
+      const mc = $('matchCount');
+      if (mc) mc.textContent = String(matched);
+      paintSelection();
+    }
+  }
+
+  function onPick(side, id, el) {
+    if (el.dataset.matched === '1') return;
+    if (!selected) {
+      selected = { side, id, el };
+      paintSelection();
+      return;
+    }
+    if (selected.side === side && selected.id === id) {
+      selected = null;
+      paintSelection();
+      return;
+    }
+    if (selected.side !== side && selected.id === id) {
+      // correct — mark without reshuffling
+      const pairs = currentBatch();
+      const w = pairs.find(x => x.term === id);
+      if (w) w._matched = true;
+      qsa('#matchBoard .match-tile').forEach(b => {
+        if (b.dataset.id === id) {
+          b.dataset.matched = '1';
+          b.classList.add('matched', 'just-matched');
+        }
+      });
+      selected = null;
+      paintSelection();
+      addPoints(8);
+      bumpDaily();
+      const matched = pairs.filter(x => x._matched).length;
+      const mc = $('matchCount');
+      if (mc) mc.textContent = String(matched);
+      if (matched === pairs.length) {
+        const msg = $('matchMsg');
+        if (batchStart + BATCH < all.length) {
+          if (msg) {
+            msg.style.display = 'block';
+            msg.className = 'feedback show ok';
+            msg.innerHTML = 'Nice! All matched on this page. <button type="button" class="btn btn-primary btn-sm" id="matchNext" style="margin-left:8px">Next 6 →</button>';
+            const nb = $('matchNext');
+            if (nb) nb.onclick = () => { batchStart += BATCH; buildOrders(); render(true); };
+          }
+        } else {
+          if (msg) {
+            msg.style.display = 'block';
+            msg.className = 'feedback show ok';
+            msg.textContent = 'All ' + all.length + ' phrases matched — great work!';
+          }
+        }
+      }
+      return;
+    }
+    // wrong — brief flash, keep positions
+    el.classList.add('wrong-flash');
+    if (selected.el) selected.el.classList.add('wrong-flash');
+    setTimeout(() => {
+      selected = null;
+      paintSelection();
+    }, 450);
+  }
+
+  buildOrders();
   showView('Mode');
-  render();
+  setTitle('Match');
+  try { updateHeaderNav(); } catch (e) {}
+  render(true);
 }
+
+
 
 function startGapAll() {
   if (!requireLesson()) return;
   const list = shuffle(words.slice());
   let idx = 0, score = 0;
   const content = $('modeContent');
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
   function render() {
     if (idx >= list.length) {
-      content.innerHTML = '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Gap fill complete<br><strong>' + score + '</strong> / ' + list.length + '</div>';
+      content.innerHTML =
+        '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Gaps complete<br><strong>' + score + '</strong> / ' + list.length + ' correct</div>' +
+        '<button type="button" class="btn btn-primary btn-block" id="gapAgain">Again</button>';
+      const again = $('gapAgain');
+      if (again) again.onclick = () => startGapAll();
       return;
     }
     const w = list[idx];
+    const correct = w.term;
+    const distractors = shuffle(words.filter(x => x.term !== w.term).map(x => x.term));
+    const opts = shuffle([correct].concat(distractors.slice(0, 3)));
+    const letters = ['A', 'B', 'C', 'D'];
+
     content.innerHTML =
       '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
-      '<div class="prompt-box">Fill the gap</div>' +
-      '<div class="gap-sentence">' + blankExample(w).replace('_____', '<span class="gap-blank">_____</span>') + '</div>' +
-      '<input class="spell-input" id="gapAllInput" placeholder="Type the missing phrase…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
-      '<div class="prac-actions" style="margin-top:10px"><button class="btn btn-sm" id="gapAllHint">Hint</button><button class="btn btn-primary btn-sm" id="gapAllCheck">Check</button></div>' +
-      '<div class="feedback" id="gapAllFb"></div>';
-    const check = () => {
-      const val = (($('gapAllInput') && $('gapAllInput').value) || '').trim().toLowerCase().replace(/\s+/g, ' ');
-      const need = w.term.toLowerCase().replace(/\s+/g, ' ');
-      const fb = $('gapAllFb');
-      if (val === need) {
-        score++; addPoints(6); bumpDaily();
-        if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
-      } else {
-        if (fb) { fb.textContent = 'Answer: ' + w.term; fb.className = 'feedback show bad'; }
-      }
-      setTimeout(() => { idx++; render(); }, 900);
-    };
-    if ($('gapAllCheck')) $('gapAllCheck').onclick = check;
-    if ($('gapAllHint')) $('gapAllHint').onclick = () => {
-      const fb = $('gapAllFb');
-      if (fb) { fb.textContent = 'Hint: ' + phraseHint(w.term, 1); fb.className = 'feedback show'; }
-    };
+      '<div class="quiz-prompt">' +
+        '<div class="quiz-prompt-label">Fill the gap — choose the phrase</div>' +
+        '<div class="gap-sentence-big"><span class="gap-blank">______</span> — ' + escapeHtml(w.definition) + '</div>' +
+        (w.example ? '<div class="gap-ex">e.g. “' + escapeHtml(w.example) + '”</div>' : '') +
+      '</div>' +
+      '<div class="quiz-options" id="gapOpts"></div>' +
+      '<div class="feedback" id="gapAllFb"></div>' +
+      '<div class="prac-actions" style="margin-top:10px"><button type="button" class="btn btn-sm" id="gapSkip">Skip →</button></div>';
+
+    if ($('gapSkip')) $('gapSkip').onclick = () => { idx++; render(); };
+
+    const box = $('gapOpts');
+    opts.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-opt';
+      b.innerHTML = '<span class="quiz-letter">' + letters[i] + ')</span> <span class="quiz-opt-text">' + escapeHtml(opt) + '</span>';
+      b.onclick = () => {
+        const fb = $('gapAllFb');
+        qsa('#gapOpts .quiz-opt').forEach(x => { x.disabled = true; x.style.pointerEvents = 'none'; });
+        if (opt === correct) {
+          score++;
+          addPoints(6);
+          bumpDaily();
+          b.classList.add('correct');
+          if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
+        } else {
+          b.classList.add('wrong');
+          qsa('#gapOpts .quiz-opt').forEach(x => {
+            const t = x.querySelector('.quiz-opt-text');
+            if (t && t.textContent === correct) x.classList.add('correct');
+          });
+          if (fb) { fb.textContent = 'Answer: ' + correct; fb.className = 'feedback show bad'; }
+        }
+        setTimeout(() => { idx++; render(); }, 2000);
+      };
+      box.appendChild(b);
+    });
   }
-  setTitle('Fill the gaps');
+
   showView('Mode');
+  setTitle('Gaps');
+  try { updateHeaderNav(); } catch (e) {}
   render();
+}
+
+
+function sentenceTokensFor(w) {
+  // Prefer example sentence; fall back to "TERM — definition"
+  let sentence = (w.example || '').trim();
+  if (!sentence) {
+    sentence = w.term + ' means ' + (w.definition || '').replace(/\.$/, '');
+  }
+  // Strip surrounding quotes
+  sentence = sentence.replace(/^[\"“”']+|[\"“”']+$/g, '');
+  // Tokenize words (keep punctuation attached lightly)
+  const parts = sentence.split(/(\s+)/).filter(x => x.trim().length);
+  return parts;
+}
+function highlightTermHtml(text, term) {
+  if (!term) return escapeHtmlSafe(text);
+  const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&') + ')', 'ig');
+  return escapeHtmlSafe(text).replace(re, '<span class="kw-green">$1</span>');
+}
+function escapeHtmlSafe(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function startOrderAll() {
   if (!requireLesson()) return;
-  const list = shuffle(words.slice()).filter(w => tokenizePhrase(w.term).length > 1);
+  const list = shuffle(words.slice()).filter(w => sentenceTokensFor(w).length >= 3);
   if (!list.length) {
-    openModal('<div class="modal-title">Word order</div><p style="color:var(--muted)">Need multi-word phrases in this lesson.</p>');
+    openModal('<div class="modal-title">Word order</div><p style="color:var(--muted)">No example sentences available.</p>');
     return;
   }
   let idx = 0, score = 0;
   let localPicked = [];
+  let targetTokens = [];
   const content = $('modeContent');
+
   function render() {
     if (idx >= list.length) {
-      content.innerHTML = '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Word order complete<br><strong>' + score + '</strong> / ' + list.length + '</div>';
+      content.innerHTML =
+        '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Complete<br><strong>' + score + '</strong> / ' + list.length + '</div>' +
+        '<button type="button" class="btn btn-primary btn-block" id="oaAgain">Again</button>';
+      const ag = $('oaAgain');
+      if (ag) ag.onclick = () => startOrderAll();
       return;
     }
     const w = list[idx];
-    const tokens = tokenizePhrase(w.term);
+    targetTokens = sentenceTokensFor(w);
     localPicked = [];
     content.innerHTML =
       '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
-      '<div class="prompt-box">' + (w.definition || 'Put the words in order') + '</div>' +
+      '<div class="quiz-prompt">' +
+        '<div class="quiz-prompt-label">Build a sentence with the phrase</div>' +
+        '<div class="quiz-term">' + escapeHtmlSafe(w.term) + '</div>' +
+        '<div style="font-size:0.85rem;color:var(--muted);margin-top:6px">' + escapeHtmlSafe(w.definition || '') + '</div>' +
+      '</div>' +
       '<div class="order-built" id="oaBuilt"></div>' +
       '<div class="order-tiles" id="oaTiles"></div>' +
-      '<div class="prac-actions"><button class="btn btn-sm" id="oaClear">Clear</button><button class="btn btn-sm" id="oaHint">Hint</button><button class="btn btn-primary btn-sm" id="oaCheck">Check</button></div>' +
+      '<div class="prac-actions">' +
+        '<button type="button" class="btn btn-sm" id="oaClear">Clear</button>' +
+        '<button type="button" class="btn btn-sm" id="oaHint">Hint</button>' +
+        '<button type="button" class="btn btn-primary btn-sm" id="oaCheck">Check</button>' +
+        '<button type="button" class="btn btn-sm" id="oaSkip">Skip →</button>' +
+      '</div>' +
       '<div class="feedback" id="oaFb"></div>';
+
     const tiles = $('oaTiles');
-    shuffle(tokens.slice()).forEach(tok => {
+    shuffle(targetTokens.slice()).forEach((tok) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'order-tile';
-      b.textContent = tok;
-      b.onclick = () => {
+      const isKey = tok.replace(/[^\w\s'-]/gi,'').toLowerCase() === w.term.toLowerCase() ||
+        tok.toLowerCase().indexOf(w.term.toLowerCase()) !== -1;
+      if (isKey) {
+        b.innerHTML = '<span class="kw-green">' + escapeHtmlSafe(tok) + '</span>';
+        b.classList.add('key-tile');
+      } else {
+        b.textContent = tok;
+      }
+      b.dataset.tok = tok;
+      b.addEventListener('click', () => {
         if (b.classList.contains('used')) return;
         b.classList.add('used');
-        localPicked.push({ tok: tok, btn: b });
+        localPicked.push(tok);
         const built = $('oaBuilt');
         if (built) {
-          const chip = document.createElement('span');
-          chip.className = 'order-chip';
-          chip.textContent = tok;
-          built.appendChild(chip);
+          const span = document.createElement('span');
+          span.className = 'order-chip' + (isKey ? ' key-chip' : '');
+          if (isKey) span.innerHTML = '<span class="kw-green">' + escapeHtmlSafe(tok) + '</span>';
+          else span.textContent = tok;
+          built.appendChild(span);
         }
-      };
+      });
       tiles.appendChild(b);
     });
-    if ($('oaClear')) $('oaClear').onclick = () => render();
+
+    const clear = () => {
+      localPicked = [];
+      const built = $('oaBuilt');
+      if (built) built.innerHTML = '';
+      qsa('#oaTiles .order-tile').forEach(x => x.classList.remove('used'));
+      const fb = $('oaFb');
+      if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    };
+    if ($('oaClear')) $('oaClear').onclick = clear;
     if ($('oaHint')) $('oaHint').onclick = () => {
       const fb = $('oaFb');
-      if (fb) { fb.textContent = 'Hint: ' + phraseHint(w.term, 1); fb.className = 'feedback show'; }
-    };
-    if ($('oaCheck')) $('oaCheck').onclick = () => {
-      const got = localPicked.map(x => x.tok).join(' ').toLowerCase();
-      const need = w.term.toLowerCase().replace(/\s+/g, ' ').trim();
-      const fb = $('oaFb');
-      if (got === need) {
-        score++; addPoints(7); bumpDaily();
-        if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
-      } else {
-        if (fb) { fb.textContent = 'Answer: ' + w.term; fb.className = 'feedback show bad'; }
+      if (fb) {
+        fb.innerHTML = 'Starts with: “' + escapeHtmlSafe(targetTokens.slice(0, 2).join(' ')) + '…”';
+        fb.className = 'feedback show';
       }
-      setTimeout(() => { idx++; render(); }, 900);
+    };
+    if ($('oaSkip')) $('oaSkip').onclick = () => { idx++; render(); };
+    if ($('oaCheck')) $('oaCheck').onclick = () => {
+      const got = localPicked.join(' ').toLowerCase().replace(/\s+/g, ' ').trim();
+      const need = targetTokens.join(' ').toLowerCase().replace(/\s+/g, ' ').trim();
+      // also accept without punctuation differences
+      const norm = s => s.replace(/[.,!?;:\"“”']/g, '').replace(/\s+/g, ' ').trim();
+      const fb = $('oaFb');
+      if (norm(got) === norm(need)) {
+        score++;
+        addPoints(8);
+        bumpDaily();
+        if (fb) {
+          fb.innerHTML = '✅ Correct!<br><span class="answer-reveal">' + highlightTermHtml(targetTokens.join(' '), w.term) + '</span>';
+          fb.className = 'feedback show ok';
+        }
+      } else {
+        if (fb) {
+          fb.innerHTML = 'Answer:<br><span class="answer-reveal">' + highlightTermHtml(targetTokens.join(' '), w.term) + '</span>';
+          fb.className = 'feedback show bad';
+        }
+      }
+      setTimeout(() => { idx++; render(); }, 2200);
     };
   }
-  setTitle('Word order');
+
   showView('Mode');
+  setTitle('Word order');
+  try { updateHeaderNav(); } catch (e) {}
   render();
 }
+
+
+function sentenceTokensFor(w) {
+  // Prefer example sentence if it contains the term and has enough words
+  let ex = (w.example || '').replace(/^[“"']|[”"']$/g, '').trim();
+  if (ex && tokenizePhrase(ex).length >= 4) {
+    // strip trailing period for tiles, keep words
+    ex = ex.replace(/[.!?]+$/, '');
+    return tokenizePhrase(ex);
+  }
+  // Fallback template sentence including the term as one tile when multi-word
+  const term = (w.term || '').trim();
+  if (!term) return [];
+  if (tokenizePhrase(term).length > 1) {
+    return tokenizePhrase('People often ' + term + ' in daily life');
+  }
+  return tokenizePhrase('She is very ' + term + ' at work');
+}
+
+
 
 function startHangmanAll() {
   if (!requireLesson()) return;
@@ -3521,60 +4334,73 @@ function startQuiz() {
   const list = shuffle(words.slice());
   let idx = 0, score = 0;
   const content = $('modeContent');
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
   function render() {
     if (idx >= list.length) {
       content.innerHTML =
         '<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏁</div>Quiz complete<br><strong>' + score + '</strong> / ' + list.length + ' correct</div>' +
-        '<button class="btn btn-primary btn-block" id="quizAgain">Again</button>';
-      $('quizAgain').onclick = () => startQuiz();
+        '<button type="button" class="btn btn-primary btn-block" id="quizAgain">Again</button>';
+      const again = $('quizAgain');
+      if (again) again.onclick = () => startQuiz();
       return;
     }
     const w = list[idx];
-    const reverse = Math.random() > 0.45;
-    const answer = reverse ? w.term : w.definition;
-    const promptText = reverse ? w.definition : w.term;
-    const pool = words.filter(x => x.term !== w.term);
-    shuffle(pool);
-    const opts = [answer];
-    while (opts.length < 4 && pool.length) {
-      const o = reverse ? pool.pop().term : pool.pop().definition;
-      if (!opts.includes(o)) opts.push(o);
-    }
-    shuffle(opts);
+    const correct = w.definition;
+    const distractors = shuffle(words.filter(x => x.term !== w.term).map(x => x.definition));
+    const opts = shuffle([correct].concat(distractors.slice(0, 3)));
+    const letters = ['A', 'B', 'C', 'D'];
+
     content.innerHTML =
-      '<div class="score-bar"><span>' + (idx+1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
-      '<div class="prompt-box">' + (reverse ? 'Which phrase?' : 'What does it mean?') + '<br><strong style="display:block;margin-top:8px;font-size:16px">' + escapeHtml(promptText) + '</strong></div>' +
-      '<div class="mc-options" id="quizOpts"></div>' +
-      '<div class="feedback" id="quizFb"></div>';
+      '<div class="score-bar"><span>' + (idx + 1) + ' / ' + list.length + '</span><span>Score: <strong>' + score + '</strong></span></div>' +
+      '<div class="quiz-prompt">' +
+        '<div class="quiz-prompt-label">What does this phrase mean?</div>' +
+        '<div class="quiz-term">' + escapeHtml(w.term) + '</div>' +
+      '</div>' +
+      '<div class="quiz-options" id="quizOpts"></div>' +
+      '<div class="feedback" id="quizFb"></div>' +
+      '<div class="prac-actions" style="margin-top:10px"><button type="button" class="btn btn-sm" id="quizSkip">Skip →</button></div>';
+
+    if ($('quizSkip')) $('quizSkip').onclick = () => { idx++; render(); };
+
     const box = $('quizOpts');
-    opts.forEach(o => {
+    opts.forEach((opt, i) => {
       const b = document.createElement('button');
-      b.className = 'mc-opt';
-      b.textContent = o;
+      b.type = 'button';
+      b.className = 'quiz-opt';
+      b.innerHTML = '<span class="quiz-letter">' + letters[i] + ')</span> <span class="quiz-opt-text">' + escapeHtml(opt) + '</span>';
       b.onclick = () => {
-        qsa('.mc-opt', box).forEach(x => x.style.pointerEvents = 'none');
-        if (o === answer) {
-          b.classList.add('correct');
+        const fb = $('quizFb');
+        qsa('#quizOpts .quiz-opt').forEach(x => { x.disabled = true; x.style.pointerEvents = 'none'; });
+        if (opt === correct) {
           score++;
-          addPoints(5);
+          addPoints(6);
           bumpDaily();
-          $('quizFb').textContent = 'Correct!';
-          $('quizFb').className = 'feedback show ok';
+          b.classList.add('correct');
+          if (fb) { fb.textContent = '✅ Correct!'; fb.className = 'feedback show ok'; }
         } else {
           b.classList.add('wrong');
-          qsa('.mc-opt', box).forEach(x => { if (x.textContent === answer) x.classList.add('correct'); });
-          $('quizFb').textContent = 'Answer: ' + answer;
-          $('quizFb').className = 'feedback show bad';
+          qsa('#quizOpts .quiz-opt').forEach(x => {
+            const t = x.querySelector('.quiz-opt-text');
+            if (t && t.textContent === correct) x.classList.add('correct');
+          });
+          if (fb) { fb.textContent = 'Answer: ' + correct; fb.className = 'feedback show bad'; }
         }
-        setTimeout(() => { idx++; render(); }, 900);
+        setTimeout(() => { idx++; render(); }, 2000);
       };
       box.appendChild(b);
     });
   }
-  setTitle('Random Quiz');
+
   showView('Mode');
+  setTitle('Quiz');
+  try { updateHeaderNav(); } catch (e) {}
   render();
 }
+
 
 function startTestSpelling() {
   if (!requireLesson()) return;
@@ -3616,7 +4442,7 @@ function startTestSpelling() {
         $('tsFb').textContent = 'Answer: ' + w.term;
         $('tsFb').className = 'feedback show bad';
       }
-      setTimeout(() => { idx++; render(); }, 1000);
+      setTimeout(() => { idx++; render(); }, 2200);
     };
     setTimeout(() => { const inp = $('tsInput'); if (inp) inp.focus(); }, 100);
   }
@@ -3660,7 +4486,7 @@ function startTestPron() {
             $('prFb').textContent = 'Not close enough. Try again or skip.';
             $('prFb').className = 'feedback show bad';
           }
-          setTimeout(() => { idx++; render(); }, 1100);
+          setTimeout(() => { idx++; render(); }, 2200);
         },
         () => {},
         $('prStatus')
@@ -3741,7 +4567,7 @@ function startSpeakAll() {
             bumpDaily();
             $('saFb').textContent = 'Phrase detected — well done!';
             $('saFb').className = 'feedback show ok';
-            setTimeout(() => { idx++; render(); }, 900);
+            setTimeout(() => { idx++; render(); }, 2200);
           } else {
             $('saFb').textContent = 'Phrase not clearly detected. Heard: “' + transcript + '”';
             $('saFb').className = 'feedback show bad';
@@ -3987,6 +4813,24 @@ function resetProgress() {
 /* ---------- Wire events ---------- */
 function wire() {
   $('btnMenu').addEventListener('click', openDrawer);
+  const btnYgPlay = $('btnYouglishPlay');
+  if (btnYgPlay) btnYgPlay.addEventListener('click', function() {
+    const term = (currentWord && currentWord.term) || ygLastTerm;
+    ygBaseTerm = term || '';
+    ygResultIndex = 0;
+    if (term) loadYouGlish(term);
+  });
+  const ygPrev = $('yg-prev-btn');
+  const ygNext = $('yg-next-btn');
+  if (ygPrev) ygPrev.addEventListener('click', function(e) {
+    e.preventDefault(); e.stopPropagation();
+    ygNavigate(-1);
+  });
+  if (ygNext) ygNext.addEventListener('click', function(e) {
+    e.preventDefault(); e.stopPropagation();
+    ygNavigate(1);
+  });
+
 
   // Photo finder
   const btnPhoto = $('btnPhotoFind');
@@ -3998,18 +4842,14 @@ function wire() {
   const btnPhotoGoogle = $('btnPhotoGoogle');
   if (btnPhotoGoogle) btnPhotoGoogle.addEventListener('click', openGoogleImages);
   // YouGlish play on demand
-  const btnYgPlay = $('btnYouglishPlay');
-  if (btnYgPlay) btnYgPlay.addEventListener('click', () => {
-    if (currentWord) loadYouGlish(currentWord.term);
-  });
+  
   // Step-by-step back via header ←
   const btnHome = $('btnHome');
   if (btnHome) {
     btnHome.addEventListener('click', (e) => {
-      if (btnHome.dataset.nav === 'grid') {
-        e.preventDefault();
-        goBackStep();
-      }
+      e.preventDefault();
+      goBackStep();
+      return false;
     });
   }
 
